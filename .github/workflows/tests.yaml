@@ -1,0 +1,31 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: "0.12.10"
+          enable-cache: true
+      - run: uv sync --locked
+      - run: uv run ruff check .
+      - run: uv run ruff format --check .
+      - run: uv run pytest
+      - name: Run both 200-step smoke configurations
+        run: |
+          uv run python -m gae_credit.train --config configs/smoke_dense_h3.yaml
+          uv run python -m gae_credit.train --config configs/smoke_dense_full.yaml
+      - name: Validate artifacts
+        run: |
+          for run in runs/*; do uv run python scripts/validate_run.py "$run"; done

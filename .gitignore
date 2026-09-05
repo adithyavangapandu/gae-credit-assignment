@@ -1,0 +1,42 @@
+# Python and virtual environments
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+.uv-cache/
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+*service-account*.json
+credentials*.json
+.gcloud/
+*.pem
+*.key
+
+# Generated experiments and references
+runs/
+outputs/
+checkpoints/
+logs/
+data/raw/
+data/private/
+*.pdf
+*.pt
+*.pth
+
+# Generated reports
+site/_site/
+.quarto/
+
+# OS and editor
+.DS_Store
+.vscode/
+.idea/

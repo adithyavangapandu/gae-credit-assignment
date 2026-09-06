@@ -131,7 +131,8 @@ and `stable_success`. The default trainer does not persist these transient dicti
 ## Checkpoint and summary
 
 `checkpoints/final.pt` contains actor/critic state dictionaries, both Adam states,
-resolved config/hash, and final env_steps. Resume is outside this milestone.
+resolved config/hash, and final env_steps. Day 4 extends this format for recovery,
+as described below.
 
 `summary.json` contains identity/hash, `total_env_steps`, `updates`, `episodes`
 (all splits), `evaluation_count`, `actor_parameters_changed`,
@@ -147,3 +148,27 @@ hash, horizons, diagnostics, and checkpoint presence. Corruption tests verify
 rejection. Repeated local seed/config runs must match table values (excluding
 elapsed time), diagnostic arrays, and final model hashes. Timestamps and platform
 metadata may differ. Generated files are ignored by Git.
+
+## Day 4 extensions (Parquet schema remains version 1)
+
+New manifests carry `artifact_protocol: 2`, `phase`, a SHA-256 `source_digest`,
+and nullable `image_digest` (required for cloud runs). Cloud manifests also carry
+`vertex_run_id`, `artifact_prefix`, `vertex_experiment`, `gcp_project`, `gcp_region`,
+and `machine_type`. Resumed manifests add `resumed_from_update` and
+`elapsed_before_resume_seconds`. Cloud IDs use hyphens and include phase to meet
+Vertex naming/label rules; local Day 3 identities remain unchanged. The disabled
+checkpoint interval (0) is omitted from canonical YAML/hash to retain legacy identities.
+
+`validation_report.json` contains the result of the same semantic validator.
+`checksums.json` version 1 maps each authoritative relative artifact path to its
+SHA-256 and byte size. `_SUCCESS` contains the checksum file's SHA-256 and is
+written last. Downloaded bundles must pass both semantic and checksum validation.
+Legacy Day 3 manifests without artifact_protocol remain readable.
+
+Checkpoint schema version 1 adds run ID, source/image/runtime fingerprints,
+update counter, original actor/critic hashes, accumulated elapsed time, all RNG
+states, environment/reward snapshots, and historical table rows/diagnostic bytes.
+Checkpoints are taken only after full updates; recovery rebuilds logs through
+that boundary, discarding any incomplete work after it. Checkpoint payloads load
+with PyTorch's restricted `weights_only=True` loader. See
+[day4_cloud.md](day4_cloud.md) for cloud recovery pointers and lease semantics.

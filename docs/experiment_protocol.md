@@ -135,6 +135,10 @@ are excluded from Git history.
   confound and the difference between post-transition and Gymnasium costs.
 - Future changes must append date, exact change, rationale, and whether any
   pilot/final outcomes were available when the change was made.
+- 2026-09-06: Added optional cloud execution and update-boundary checkpoint
+  recovery. The smoke uses excluded seed 100 for 5,000 steps; pilot/final reward,
+  environment, estimator, evaluation and training contracts are unchanged. No
+  pilot/final outcomes were available. Day 4 does not freeze final settings.
 
 ## Deferred until Day 4 or later
 

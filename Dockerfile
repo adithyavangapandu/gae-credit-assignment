@@ -1,5 +1,9 @@
 FROM ghcr.io/astral-sh/uv:0.12.10 AS uv
-FROM python:3.11.16-slim-bookworm
+FROM python:3.11.16-slim-bookworm AS runtime
+
+ARG INSTALL_GCP=false
+ARG GIT_SHA=unknown
+ENV GAE_GIT_SHA=$GIT_SHA
 
 COPY --from=uv /uv /usr/local/bin/uv
 ENV UV_PYTHON_DOWNLOADS=never \
@@ -9,7 +13,8 @@ ENV UV_PYTHON_DOWNLOADS=never \
 WORKDIR /app
 COPY pyproject.toml uv.lock README.md LICENSE ./
 COPY src ./src
-RUN uv sync --locked --no-dev --no-editable
+RUN if [ "$INSTALL_GCP" = "true" ]; then uv sync --locked --extra gcp --no-dev --no-editable; \
+    else uv sync --locked --no-dev --no-editable; fi
 COPY configs ./configs
 COPY scripts ./scripts
 RUN groupadd --gid 10001 experiment \
@@ -19,3 +24,11 @@ RUN groupadd --gid 10001 experiment \
 USER experiment
 ENTRYPOINT ["python", "-m", "gae_credit.train"]
 CMD ["--config", "configs/smoke_dense_h3.yaml"]
+
+FROM runtime AS test
+USER root
+RUN uv sync --locked --extra gcp --no-editable
+COPY tests ./tests
+RUN uv run --extra gcp ruff check . && uv run --extra gcp pytest
+
+FROM runtime AS final

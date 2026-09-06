@@ -1,0 +1,17 @@
+study_id: gae-pendulum-v1
+seed: 100
+reward:
+  kind: dense
+estimator:
+  horizon: 3
+  actor_horizon: 3
+  critic_horizon: 3
+training:
+  total_env_steps: 5000
+  episodes_per_rollout: 5
+  checkpoint_interval_env_steps: 1000
+optimizer:
+  epochs: 2
+evaluation:
+  episodes: 2
+  interval_env_steps: 1000

@@ -81,6 +81,7 @@ class AlgorithmConfig:
 class TrainingConfig:
     total_env_steps: int = 1_000_000
     episodes_per_rollout: int = 5
+    checkpoint_interval_env_steps: int = 0
 
 
 @dataclass(frozen=True)
@@ -177,6 +178,18 @@ class StudyConfig:
         _positive(self.evaluation.episodes, "evaluation.episodes", integer=True)
         _positive(self.evaluation.interval_env_steps, "interval_env_steps", integer=True)
         rollout_size = self.environment.max_steps * self.training.episodes_per_rollout
+        checkpoint_interval = self.training.checkpoint_interval_env_steps
+        if (
+            isinstance(checkpoint_interval, bool)
+            or not isinstance(checkpoint_interval, int)
+            or checkpoint_interval < 0
+            or checkpoint_interval % rollout_size
+        ):
+            raise ValueError(
+                "checkpoint interval must be zero or a positive multiple of rollout size"
+            )
+        if checkpoint_interval and not self.logging.save_checkpoint:
+            raise ValueError("Periodic checkpoints require save_checkpoint")
         if self.training.total_env_steps % rollout_size:
             raise ValueError("total_env_steps must be divisible by complete rollout size")
         if self.evaluation.interval_env_steps % rollout_size:
@@ -197,6 +210,9 @@ class StudyConfig:
 
     def to_dict(self) -> dict:
         result = asdict(self)
+        # Preserve identities and validation of the already-produced Day 3 data.
+        if self.training.checkpoint_interval_env_steps == 0:
+            result["training"].pop("checkpoint_interval_env_steps")
         result["estimator"]["lambda"] = result["estimator"].pop("lam")
         result["seeds"] = {k: list(v) for k, v in result["seeds"].items()}
         return result

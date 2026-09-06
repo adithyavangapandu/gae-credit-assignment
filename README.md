@@ -19,9 +19,9 @@ remaining residual through the episode boundary. Both use real rewards and
 critic predictions. Comparing dense rewards with discounted-return-preserving
 delayed rewards helps study how reward timing interacts with that cutoff.
 
-**Current scope: Days 1–3, a local, tested PPO foundation. No learning performance
-claims.** Cloud execution, pilots, full training, and final comparisons are
-deferred. Eventually this repository will accompany a report with the frozen
+**Current scope: the Days 1–3 PPO foundation plus Day 4 cloud execution and
+checkpoint recovery. No learning performance claims.** Pilots, full training,
+and final comparisons are deferred. Eventually this repository will accompany a report with the frozen
 protocol, seed-level learning curves, credit diagnostics, and reproducible
 analysis. The remote remains private during foundation work.
 
@@ -48,9 +48,9 @@ change, metrics must be finite, and artifacts must pass validation. Differences
 in smoke returns do **not** establish estimator quality.
 
 Inspect a run with `uv run python scripts/inspect_run.py runs/RUN_ID`. Existing
-runs are rejected; use `--overwrite` explicitly to replace that exact run, or
-`--output-dir runs/another-location` for a separate identity. Resume is not
-implemented. `configs/base.yaml` describes the future million-step budget and
+runs are rejected; use `--overwrite` explicitly to replace that exact local run, or
+`--output-dir runs/another-location` for a separate identity. Use `--resume` with a
+matching checkpoint to recover an interrupted run. `configs/base.yaml` describes the future million-step budget and
 is not needed for smoke validation.
 
 ## Experiment contract
@@ -76,6 +76,20 @@ Read the [experiment protocol](docs/experiment_protocol.md),
 
 The [Days 1–3 validation record](docs/validation.md) records the 127 passing
 tests, both local smoke runs, Docker/schema parity, and successful GitHub Actions.
+
+## Day 4 cloud pipeline
+
+See the [cloud execution and recovery guide](docs/day4_cloud.md). Install the
+optional SDKs with `uv sync --locked --extra gcp`. The new cloud smoke runs 5,000
+steps with excluded seed 100. Submission supports a credential-free `--dry-run`,
+uses an immutable image digest, and creates one CPU Vertex Custom Job. Vertex
+tracks live metrics; GCS stores the authoritative checksummed artifacts, with
+`_SUCCESS` published last. The same validator checks downloaded runs.
+
+Periodic checkpoints preserve model/optimizer states, all RNG streams, reward
+buffers, and prior logs. Resume rejects mismatched configuration, code, image,
+runtime, or checkpoint schema. The cloud path uses ADC and a dedicated runtime
+service account; no keys are stored in this repository.
 
 ## Artifacts
 

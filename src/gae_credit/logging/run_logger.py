@@ -71,7 +71,7 @@ def _finite_json(value: Any) -> None:
     json.dumps(value, allow_nan=False)
 
 
-class RunLogger:
+class LocalArtifactLogger:
     """Write schema-checked tables; call ``complete`` or ``fail`` to close them.
 
     A run directory cannot be reused implicitly. Explicit overwrite only removes
@@ -83,14 +83,19 @@ class RunLogger:
         config: StudyConfig,
         overwrite: bool = False,
         seeds: dict[str, int] | None = None,
+        context: dict | None = None,
+        resume_snapshot: dict | None = None,
     ) -> None:
         self.config = config
-        self.path = Path(config.logging.output_dir).expanduser() / config.run_id
+        self.context = context or {}
+        self.run_id = self.context.get("run_id", config.run_id)
+        self._rows = {name: [] for name in TABLE_SCHEMAS}
+        self.path = Path(config.logging.output_dir).expanduser() / self.run_id
         self._closed = False
         self._writers: dict[str, pq.ParquetWriter] = {}
         self._counts = dict.fromkeys(TABLE_SCHEMAS, 0)
         if self.path.exists() or self.path.is_symlink():
-            if not overwrite:
+            if not overwrite and resume_snapshot is None:
                 raise FileExistsError(f"Run already exists: {self.path}. Use explicit overwrite.")
             if self.path.is_symlink() or not self.path.is_dir():
                 raise ValueError(f"Refusing to overwrite a symlink or non-directory: {self.path}")
@@ -101,10 +106,12 @@ class RunLogger:
                     "Refusing to overwrite a directory without a valid manifest"
                 ) from error
             if (
-                previous.get("run_id") != config.run_id
+                previous.get("run_id") != self.run_id
                 or previous.get("config_hash") != config.config_hash()
             ):
                 raise ValueError("Refusing to overwrite a directory belonging to another run")
+            if resume_snapshot is not None and previous.get("status") == "completed":
+                raise ValueError("Cannot resume a completed local run")
             shutil.rmtree(self.path)
         self.path.mkdir(parents=True)
         (self.path / "diagnostics").mkdir()
@@ -115,7 +122,7 @@ class RunLogger:
         commit, dirty = _git_metadata()
         self.manifest: dict[str, Any] = {
             "schema_version": SCHEMA_VERSION,
-            "run_id": config.run_id,
+            "run_id": self.run_id,
             "config_hash": config.config_hash(),
             "status": "running",
             "started_at": _now(),
@@ -130,17 +137,37 @@ class RunLogger:
             "actor_horizon": config.estimator.actor_horizon,
             "critic_horizon": config.estimator.critic_horizon,
         }
+        self.manifest.update(self.context)
         _write_json(self.path / "manifest.json", self.manifest)
         for name, schema in TABLE_SCHEMAS.items():
             self._writers[name] = pq.ParquetWriter(
                 self.path / f"{name}.parquet", schema, compression="zstd"
             )
 
+        if resume_snapshot is not None:
+            for name, rows in resume_snapshot["rows"].items():
+                for row in rows:
+                    self._log(name, row)
+            for name, data in resume_snapshot["diagnostics"].items():
+                if not re.fullmatch(r"[A-Za-z0-9_-]+\.npz", name):
+                    raise ValueError("Invalid checkpoint diagnostic filename")
+                (self.path / "diagnostics" / name).write_bytes(data)
+
+    def snapshot(self) -> dict:
+        from copy import deepcopy
+
+        return {
+            "rows": deepcopy(self._rows),
+            "diagnostics": {
+                p.name: p.read_bytes() for p in sorted((self.path / "diagnostics").glob("*.npz"))
+            },
+        }
+
     def _log(self, name: str, row: dict[str, Any]) -> None:
         if self._closed:
             raise RuntimeError("Cannot log to a closed run")
-        enriched = {"run_id": self.config.run_id, **row}
-        if enriched["run_id"] != self.config.run_id:
+        enriched = {"run_id": self.run_id, **row}
+        if enriched["run_id"] != self.run_id:
             raise ValueError("Row run_id does not match this run")
         schema = TABLE_SCHEMAS[name]
         if set(enriched) != set(schema.names):
@@ -159,6 +186,7 @@ class RunLogger:
         table = pa.Table.from_pylist([enriched], schema=schema)
         self._writers[name].write_table(table)
         self._counts[name] += 1
+        self._rows[name].append(enriched)
 
     def log_update(self, row: dict[str, Any]) -> None:
         self._log("updates", row)
@@ -190,11 +218,8 @@ class RunLogger:
     def complete(self, summary: dict[str, Any]) -> None:
         if self._closed:
             raise RuntimeError("Run has already been closed")
-        result = {"run_id": self.config.run_id, "config_hash": self.config.config_hash(), **summary}
-        if (
-            result["run_id"] != self.config.run_id
-            or result["config_hash"] != self.config.config_hash()
-        ):
+        result = {"run_id": self.run_id, "config_hash": self.config.config_hash(), **summary}
+        if result["run_id"] != self.run_id or result["config_hash"] != self.config.config_hash():
             raise ValueError("Summary identity does not match this run")
         _finite_json(result)
         self._close()
@@ -203,9 +228,8 @@ class RunLogger:
         _write_json(self.path / "manifest.json", self.manifest)
 
     def fail(self, error: BaseException | str) -> None:
-        if self._closed:
-            return
-        self._close()
+        if not self._closed:
+            self._close()
         self.manifest.update(status="failed", finished_at=_now(), error=str(error))
         _write_json(self.path / "manifest.json", self.manifest)
 
@@ -233,7 +257,7 @@ def _validate_table(path: Path, name: str, run_id: str) -> pa.Table:
     return table
 
 
-def validate_run(run_dir: str | Path) -> dict[str, Any]:
+def validate_run(run_dir: str | Path, *, require_success: bool = True) -> dict[str, Any]:
     """Validate a completed run and return a compact, JSON-serializable report.
 
     Raises ``ValueError`` on contract violations; malformed or missing input
@@ -258,12 +282,15 @@ def validate_run(run_dir: str | Path) -> dict[str, Any]:
     _finite_json(manifest)
     _finite_json(summary)
     config = load_config(path / "resolved_config.yaml")
+    from gae_credit.cloud.config import run_id_for
+
+    expected_run_id = run_id_for(config, manifest.get("phase", "local"))
     _require(manifest.get("status") == "completed", "Run is not completed")
     _require(manifest.get("schema_version") == SCHEMA_VERSION, "Unknown schema version")
-    _require(manifest.get("run_id") == config.run_id, "Manifest run_id does not match config")
-    _require(path.name == config.run_id, "Run directory name does not match config")
+    _require(manifest.get("run_id") == expected_run_id, "Manifest run_id does not match config")
+    _require(path.name == expected_run_id, "Run directory name does not match config")
     _require(manifest.get("config_hash") == config.config_hash(), "Manifest config hash mismatch")
-    _require(summary.get("run_id") == config.run_id, "Summary run_id mismatch")
+    _require(summary.get("run_id") == expected_run_id, "Summary run_id mismatch")
     _require(summary.get("config_hash") == config.config_hash(), "Summary config hash mismatch")
     for field in ("actor_horizon", "critic_horizon"):
         _require(manifest.get(field) == getattr(config.estimator, field), f"Incorrect {field}")
@@ -277,7 +304,7 @@ def validate_run(run_dir: str | Path) -> dict[str, Any]:
         "seeds",
     ):
         _require(field in manifest, f"Missing manifest field: {field}")
-    tables = {name: _validate_table(path, name, config.run_id) for name in TABLE_SCHEMAS}
+    tables = {name: _validate_table(path, name, expected_run_id) for name in TABLE_SCHEMAS}
     updates = tables["updates"].to_pylist()
     episodes = tables["episodes"].to_pylist()
     evaluations = tables["evaluations"].to_pylist()
@@ -388,9 +415,28 @@ def validate_run(run_dir: str | Path) -> dict[str, Any]:
                 _require(bool(np.isfinite(arrays[key]).all()), f"Nonfinite diagnostic: {key}")
     if config.logging.save_checkpoint:
         _require(any((path / "checkpoints").iterdir()), "Checkpoint enabled but none was saved")
+    if manifest.get("phase", "local") != "local":
+        _require(manifest.get("vertex_run_id") == expected_run_id, "Vertex run ID mismatch")
+        _require(
+            str(manifest.get("artifact_prefix", "")).endswith("/run_id=" + expected_run_id),
+            "GCS prefix run ID mismatch",
+        )
+        _require(
+            bool(re.fullmatch(r"sha256:[0-9a-f]{64}", manifest.get("image_digest", ""))),
+            "Missing immutable image digest",
+        )
+    if manifest.get("artifact_protocol") == 2 and require_success:
+        from gae_credit.logging.integrity import verify_checksums
+
+        verify_checksums(path)
+        report = json.loads((path / "validation_report.json").read_text())
+        _require(
+            report.get("valid") is True and report.get("run_id") == expected_run_id,
+            "Invalid validation report",
+        )
     return {
         "valid": True,
-        "run_id": config.run_id,
+        "run_id": expected_run_id,
         "total_env_steps": total_steps,
         "updates": len(updates),
         "episodes": len(episodes),

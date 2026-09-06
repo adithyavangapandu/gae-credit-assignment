@@ -1,0 +1,17 @@
+# Supply --substitutions=_GIT_SHA=$(git rev-parse HEAD) when submitting locally.
+substitutions:
+  _REGION: us-central1
+  _REPOSITORY: gae-training
+  _GIT_SHA: must-set-git-sha
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args: [build, --platform, linux/amd64, --target, test, --build-arg, INSTALL_GCP=true, --build-arg, 'GIT_SHA=${_GIT_SHA}', -t, gae-training-tests, .]
+  - name: gcr.io/cloud-builders/docker
+    args: [build, --platform, linux/amd64, --build-arg, INSTALL_GCP=true, --build-arg, 'GIT_SHA=${_GIT_SHA}', -t, '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/trainer:${_GIT_SHA}', .]
+  - name: gcr.io/cloud-builders/docker
+    args: [run, --rm, '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/trainer:${_GIT_SHA}', --config, configs/cloud/smoke_dense_h3.yaml]
+images:
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/trainer:${_GIT_SHA}'
+timeout: 1800s
+options:
+  logging: CLOUD_LOGGING_ONLY

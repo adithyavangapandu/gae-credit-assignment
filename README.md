@@ -39,7 +39,7 @@ uv run ruff format --check .
 uv run pytest
 uv run python -m gae_credit.train --config configs/smoke_dense_h3.yaml
 uv run python -m gae_credit.train --config configs/smoke_dense_full.yaml
-for run in runs/*; do uv run python scripts/validate_run.py "$run"; done
+for run in runs/ppo__*; do uv run python scripts/validate_run.py "$run"; done
 ```
 
 Each smoke config performs two updates, five complete 200-step episodes per
@@ -73,6 +73,9 @@ documented in the protocol. Sparse reward also changes the task objective.
 Read the [experiment protocol](docs/experiment_protocol.md),
 [mathematical definitions](docs/mathematical_definitions.md), and
 [data dictionary](docs/data_dictionary.md).
+
+The [Days 1–3 validation record](docs/validation.md) records the 127 passing
+tests, both local smoke runs, Docker/schema parity, and successful GitHub Actions.
 
 ## Artifacts
 

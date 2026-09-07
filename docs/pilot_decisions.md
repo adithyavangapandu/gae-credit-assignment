@@ -6,6 +6,11 @@ select a reward/horizon winner.
 
 ## Frozen before pilot submission
 
+- Training source commit: `ef50d309ff57e990f5402020f99ea414de047292`.
+- Tested container image:
+  `us-central1-docker.pkg.dev/gae-experiment-507805/gae-training/trainer@sha256:3f1d25d4f189263a74deba31406714fab58e031ee1b8616d9992d42c9e7d95da`.
+  Cloud Build `2d9f7576-28a9-4363-b526-2f1f2aa1e996` passed 153 tests and
+  the 5,000-step container smoke before publication.
 - Pilot design: PPO, four reward conditions, H=3/full, seeds 100–102, and
   250,000 environment steps per run.
 - Global optimizer/evaluation settings are in `configs/pilot/study_v1.yaml`.
@@ -21,7 +26,7 @@ select a reward/horizon winner.
 
 ## Pending the 24-run quality gate
 
-The final source commit, container digest, runtime/cost estimate, failure count,
-metric endpoints, confirmatory matrix, and `experiment-v1` tag are recorded here
-only after all pilot runs pass automated validation. Day 6 runs must not launch
-before that freeze.
+The runtime/cost estimate, failure count, metric endpoints, confirmatory matrix,
+final metadata commit, and `experiment-v1` tag are recorded here only after all
+pilot runs pass automated validation. Day 6 runs must not launch before that
+freeze.

@@ -28,6 +28,10 @@ The matrix contains four rewards by two horizons by three excluded seeds. It is
 sorted deterministically, has unique config hashes and run IDs, and records the
 exact image and GCS prefix for every task.
 
+The pilot image was built from commit
+`ef50d309ff57e990f5402020f99ea414de047292` and pinned at digest
+`sha256:3f1d25d4f189263a74deba31406714fab58e031ee1b8616d9992d42c9e7d95da`.
+
 Preflight or submit the first four jobs with:
 
 ```bash

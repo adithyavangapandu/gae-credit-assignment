@@ -80,7 +80,8 @@ def collect_rollout(
             velocity_cost += float(info["velocity_cost"])
             torque_cost += float(info["torque_cost"])
             torque_energy += float(info["torque"]) ** 2 * env.config.dt
-            if bool(info["upright_indicator"]):
+            upright = bool(reward_info.get("upright", info["upright_indicator"]))
+            if upright:
                 upright_count += 1
                 upright_streak += 1
                 longest_streak = max(longest_streak, upright_streak)

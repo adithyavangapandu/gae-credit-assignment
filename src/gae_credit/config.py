@@ -44,6 +44,16 @@ class EnvironmentConfig:
 class RewardConfig:
     kind: Literal["dense", "delayed", "sparse"] = "dense"
     delay_block_size: int = 1
+    upright_angle_threshold: float | None = None
+    upright_velocity_threshold: float | None = None
+
+    @property
+    def resolved_upright_angle_threshold(self) -> float:
+        return 0.262 if self.upright_angle_threshold is None else self.upright_angle_threshold
+
+    @property
+    def resolved_upright_velocity_threshold(self) -> float:
+        return 1.0 if self.upright_velocity_threshold is None else self.upright_velocity_threshold
 
 
 @dataclass(frozen=True)
@@ -137,6 +147,19 @@ class StudyConfig:
         _positive(self.reward.delay_block_size, "delay_block_size", integer=True)
         if self.reward.kind != "delayed" and self.reward.delay_block_size != 1:
             raise ValueError("delay_block_size must be 1 for dense and sparse rewards")
+        thresholds = (
+            self.reward.upright_angle_threshold,
+            self.reward.upright_velocity_threshold,
+        )
+        if self.reward.kind != "sparse" and any(value is not None for value in thresholds):
+            raise ValueError("Upright threshold overrides are only valid for sparse reward")
+        if any(value is not None for value in thresholds):
+            if any(value is None for value in thresholds):
+                raise ValueError("Specify both sparse upright thresholds")
+            for name, value in zip(
+                ("upright_angle_threshold", "upright_velocity_threshold"), thresholds
+            ):
+                _positive(value, name)
         for value in (
             self.estimator.horizon,
             self.estimator.actor_horizon,
@@ -213,6 +236,9 @@ class StudyConfig:
         # Preserve identities and validation of the already-produced Day 3 data.
         if self.training.checkpoint_interval_env_steps == 0:
             result["training"].pop("checkpoint_interval_env_steps")
+        for name in ("upright_angle_threshold", "upright_velocity_threshold"):
+            if result["reward"][name] is None:
+                result["reward"].pop(name)
         result["estimator"]["lambda"] = result["estimator"].pop("lam")
         result["seeds"] = {k: list(v) for k, v in result["seeds"].items()}
         return result

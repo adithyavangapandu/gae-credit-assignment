@@ -118,7 +118,13 @@ class BlockDelayedReward:
 class SparseUprightReward:
     """Reward every qualifying post-transition state; success needs a 10-step streak."""
 
-    def __init__(self):
+    def __init__(self, angle_threshold: float = 0.262, velocity_threshold: float = 1.0):
+        if not np.all(np.isfinite([angle_threshold, velocity_threshold])):
+            raise ValueError("upright thresholds must be finite")
+        if angle_threshold <= 0 or velocity_threshold <= 0:
+            raise ValueError("upright thresholds must be positive")
+        self.angle_threshold = float(angle_threshold)
+        self.velocity_threshold = float(velocity_threshold)
         self.reset()
 
     def reset(self) -> None:
@@ -130,7 +136,12 @@ class SparseUprightReward:
     def transform(self, base_dense_reward, theta, theta_dot, timestep, terminated):
         if not np.all(np.isfinite([theta, theta_dot])):
             raise ValueError("physical state must be finite")
-        upright = is_upright(theta, theta_dot)
+        upright = is_upright(
+            theta,
+            theta_dot,
+            angle_threshold=self.angle_threshold,
+            velocity_threshold=self.velocity_threshold,
+        )
         entered = upright and not self.previous_upright
         left = self.previous_upright and not upright
         self.upright_streak = self.upright_streak + 1 if upright else 0
@@ -152,6 +163,8 @@ class SparseUprightReward:
         return deepcopy(
             {
                 "kind": "sparse",
+                "angle_threshold": self.angle_threshold,
+                "velocity_threshold": self.velocity_threshold,
                 "previous_upright": self.previous_upright,
                 "upright_streak": self.upright_streak,
                 "longest_upright_streak": self.longest_upright_streak,
@@ -161,7 +174,11 @@ class SparseUprightReward:
 
     def set_state(self, snapshot: dict[str, Any]) -> None:
         state = deepcopy(snapshot)
-        if state["kind"] != "sparse":
+        if (
+            state["kind"] != "sparse"
+            or state.get("angle_threshold", 0.262) != self.angle_threshold
+            or state.get("velocity_threshold", 1.0) != self.velocity_threshold
+        ):
             raise ValueError("incompatible sparse reward snapshot")
         for key in ("upright_streak", "longest_upright_streak"):
             if isinstance(state[key], bool) or not isinstance(state[key], int) or state[key] < 0:
@@ -187,5 +204,8 @@ def make_reward(config: Any, gamma: float = 0.995):
     if config.kind == "delayed":
         return BlockDelayedReward(config.delay_block_size, gamma)
     if config.kind == "sparse":
-        return SparseUprightReward()
+        return SparseUprightReward(
+            getattr(config, "resolved_upright_angle_threshold", 0.262),
+            getattr(config, "resolved_upright_velocity_threshold", 1.0),
+        )
     raise ValueError(f"unknown reward kind: {config.kind!r}")

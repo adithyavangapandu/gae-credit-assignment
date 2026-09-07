@@ -248,9 +248,15 @@ def run_training(
                 episode = episodes[int(diagnostic_rng.integers(len(episodes)))]
                 arrays = {
                     "rewards": episode.rewards,
+                    "base_dense_rewards": episode.base_dense_rewards,
                     "values": episode.values,
                     "terminated": episode.terminated,
                 }
+                if config.reward.kind == "delayed":
+                    arrays["emitted_payout"] = np.asarray(
+                        [item["emitted_payout"] for item in episode.reward_diagnostics],
+                        dtype=np.bool_,
+                    )
                 results = {}
                 for horizon in (1, 3, 16, "full"):
                     results[horizon] = compute_gae(

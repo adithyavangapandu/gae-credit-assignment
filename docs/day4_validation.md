@@ -59,9 +59,11 @@ Job:
 Artifact prefix:
 `gs://gae-experiment-gae-credit-data/study_v1/smoke/algorithm=ppo/reward=dense/horizon=h003/seed=100/run_id=smoke-ppo-dense-h003-seed100-cc025069deb5/`
 
-Cloud job outcome, metrics, downloaded validation, and runtime estimate are
-pending completion of the submitted job. Monitoring was handed to the user;
-stopping the local log stream does not stop the Vertex job.
+The job succeeded on September 6, 2026 (America/New_York), with runtime from
+`2026-09-07T01:48:14Z` through `2026-09-07T01:48:44Z`. The authoritative GCS
+bundle contains `_SUCCESS`, the checksum inventory, all three Parquet tables,
+the resolved configuration, manifest, summary, validation report, diagnostics,
+and checkpoints.
 
 Check completion in the [Vertex job page](https://console.cloud.google.com/vertex-ai/locations/us-central1/training/2455577397492187136?project=gae-experiment-507805),
 or run:
@@ -72,7 +74,7 @@ gcloud ai custom-jobs describe 2455577397492187136 \
   --format='yaml(state,error)'
 ```
 
-After `JOB_STATE_SUCCEEDED`, download and validate the authoritative bundle:
+The bundle was downloaded and validated with:
 
 ```bash
 uv run --extra gcp python scripts/download_cloud_run.py \
@@ -81,11 +83,10 @@ uv run --extra gcp python scripts/download_cloud_run.py \
   --destination runs/downloaded/smoke-ppo-dense-h003-seed100-cc025069deb5
 ```
 
-This command requires `_SUCCESS`, validates checksums, and runs the same local
-semantic validator. Successful output includes `"valid": true`, 5,000 steps,
-five updates, 37 total episodes, and six evaluation checkpoints.
-If the destination already exists, use `scripts/validate_run.py` on it instead.
-Then inspect metrics in experiment `gae-pendulum-v1` and estimate runtime/cost:
+The result was `"valid": true`, with 5,000 steps, five updates, 37 total
+episodes, and six evaluation checkpoints. Vertex experiment metrics include
+finite losses, gradient norms, KL, entropy, explained variance, sparse-success
+diagnostics, and the final evaluation return. Runtime/cost was estimated with:
 
 ```bash
 uv run python scripts/estimate_run_cost.py \
@@ -93,8 +94,15 @@ uv run python scripts/estimate_run_cost.py \
   --target-env-steps 1000000 --hourly-price 0.21849885
 ```
 
-Day 4 is not yet marked complete: job success, live Vertex metrics, downloaded
-artifact validation, and the measured runtime/cost estimate remain to be verified.
+The measured training interval in the artifact was 12.56 seconds. Linear
+extrapolation to one million environment steps was 2,512 seconds (41.9 minutes)
+and approximately $0.152 in compute at the documented hourly rate. This remains
+a planning estimate because the pilot optimizer and evaluation schedule differ.
+
+Day 4 is complete. During metrics readback, the SDK unexpectedly created a
+second default TensorBoard. Resource `3165197108227604480` was identified and
+deleted on September 7, 2026; the configured TensorBoard
+`562116523607457792` remains.
 
 ## Pricing basis
 
@@ -106,4 +114,4 @@ TensorBoard, retries, provisioning overhead, and taxes are separate. The pilot
 template also differs from the smoke in evaluation size, PPO epochs, and
 checkpoint interval, so a linear smoke extrapolation is only a planning estimate.
 
-Pilots, final seed sweeps, and configuration freezing remain Day 5 work.
+Pilot runs and the final configuration freeze remain Day 5 work.

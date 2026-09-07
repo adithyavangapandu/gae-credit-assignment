@@ -1,0 +1,46 @@
+---
+title: "Excluded Pilot Quality Control"
+format: html
+execute:
+  echo: false
+---
+
+This report validates experimental operations only. Pilot seeds 100–102 are
+excluded from every confirmatory hypothesis test and effect estimate.
+
+```{python}
+import json
+from pathlib import Path
+import pandas as pd
+
+qc = json.loads(Path("pilot_qc_data.json").read_text())
+runs = pd.DataFrame(qc["reports"])
+```
+
+## Study matrix completeness
+
+```{python}
+pd.Series({key: qc[key] for key in ("expected_runs", "valid_runs", "missing_runs", "invalid_runs", "complete")})
+```
+
+## Runtime, failures, and artifact size
+
+```{python}
+runs[[column for column in ("run_id", "status", "runtime_seconds", "checkpoint_bytes", "error") if column in runs]]
+```
+
+## Reward feasibility and numerical health
+
+```{python}
+runs[[column for column in ("run_id", "rewarded_training_episodes", "upright_entries") if column in runs]]
+```
+
+The automated validator separately checks finite metrics, positive action
+standard deviation, delayed-reward payout timing and discounted conservation,
+evaluation cadence, model initialization by seed, and checkpoint presence.
+Learning curves and optimizer diagnostics are added only after all runs pass.
+
+## Proposed frozen settings
+
+The freeze decision is recorded in `docs/pilot_decisions.md` after all 24 runs
+pass the quality gate. No horizon comparison is interpreted in this report.

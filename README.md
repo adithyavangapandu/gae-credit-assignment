@@ -19,9 +19,9 @@ remaining residual through the episode boundary. Both use real rewards and
 critic predictions. Comparing dense rewards with discounted-return-preserving
 delayed rewards helps study how reward timing interacts with that cutoff.
 
-**Current scope: the Days 1–3 PPO foundation plus Day 4 cloud execution and
-checkpoint recovery. No learning performance claims.** Pilots, full training,
-and final comparisons are deferred. Eventually this repository will accompany a report with the frozen
+**Current scope: the Days 1–4 validated PPO/cloud foundation plus the excluded
+Day 5 pilot quality gate. No learning performance claims.** Full training and
+final comparisons are deferred. Eventually this repository will accompany a report with the frozen
 protocol, seed-level learning curves, credit diagnostics, and reproducible
 analysis. The remote remains private during foundation work.
 
@@ -93,6 +93,15 @@ Periodic checkpoints preserve model/optimizer states, all RNG streams, reward
 buffers, and prior logs. Resume rejects mismatched configuration, code, image,
 runtime, or checkpoint schema. The cloud path uses ADC and a dedicated runtime
 service account; no keys are stored in this repository.
+
+## Day 5 excluded pilot
+
+See the [pilot workflow](docs/day5_pilot.md) and
+[decision record](docs/pilot_decisions.md). Sparse feasibility calibration and
+the deterministic 24-run matrix are committed before submission. Pilot seeds
+100–102 are excluded from confirmatory inference. Four representative jobs form
+the initial gate; the remaining queue cannot be released until those artifacts
+pass study-level validation.
 
 ## Artifacts
 

@@ -13,8 +13,14 @@ def normalize_angle(theta: float) -> float:
     return float((theta + np.pi) % (2 * np.pi) - np.pi)
 
 
-def is_upright(theta: float, theta_dot: float) -> bool:
-    return abs(normalize_angle(theta)) < 0.262 and abs(theta_dot) < 1.0
+def is_upright(
+    theta: float,
+    theta_dot: float,
+    *,
+    angle_threshold: float = 0.262,
+    velocity_threshold: float = 1.0,
+) -> bool:
+    return abs(normalize_angle(theta)) < angle_threshold and abs(theta_dot) < velocity_threshold
 
 
 class PendulumEnv(gym.Env):

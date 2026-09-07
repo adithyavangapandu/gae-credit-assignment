@@ -1,6 +1,6 @@
 # Experiment protocol: gae-pendulum-v1
 
-Status: foundation protocol, before pilot or final experimental training. The
+Status: excluded pilot preparation, before final experimental training. The
 smoke study `gae-pendulum-smoke-v1` checks software validity only. Its returns
 must not be used to select a winning horizon or support a performance claim.
 
@@ -46,7 +46,7 @@ elapsed steps, and RNG state; reward mechanisms have separate snapshots.
 |---|---|
 | dense | Negative post-step angle squared + 0.1 velocity squared + 0.001 torque squared |
 | delayed D=8 or D=32 | Zero except discount-corrected block payouts; partial final block flushed |
-| sparse | One at every post-step state with wrapped abs(theta)<0.262 and abs(velocity)<1; zero otherwise |
+| sparse | One at every post-step state inside the versioned upright region; zero otherwise |
 
 The dense row means the negative of the **sum** of the three costs. The exact
 delay correction is defined in [mathematical_definitions.md](mathematical_definitions.md).
@@ -139,10 +139,16 @@ are excluded from Git history.
   recovery. The smoke uses excluded seed 100 for 5,000 steps; pilot/final reward,
   environment, estimator, evaluation and training contracts are unchanged. No
   pilot/final outcomes were available. Day 4 does not freeze final settings.
+- 2026-09-07: The excluded stochastic-policy calibration observed entry in
+  21.03% of 3,000 episodes at the original 0.262-radian/1.0-rad/s region. Per the
+  preregistered one-adjustment rule, the angle bound was tightened once to 10
+  degrees (0.1745329252 radians), retaining the 1.0-rad/s velocity bound. The
+  adjusted calibration observed nonzero entry in 16.90% of 3,000 episodes and
+  10-step success in 6.17%. No trained pilot or confirmatory outcomes existed.
+  The single-adjustment limit is exhausted; this threshold is used for the pilot.
 
-## Deferred until Day 4 or later
+## Deferred work
 
-Vertex AI, Cloud Storage/BigQuery, cloud credentials, VPG, pilot runs, full seed
-sweeps, performance comparisons, and publication graphics are deliberately
-deferred. The next milestone is a cloud logging backend behind the existing
-local artifact contract, then one Dockerized cloud smoke job and schema parity.
+The 220 confirmatory runs, VPG implementation, final hypothesis tests, and
+publication graphics remain deferred until the excluded pilot quality gate and
+configuration freeze are complete.

@@ -1,0 +1,63 @@
+study_version: study_v1
+purpose: excluded pilot; never use in confirmatory hypothesis tests
+sparse_thresholds:
+  angle_radians: 0.17453292519943295  # 10 degrees; one allowed tightening from 15 degrees
+  velocity: 1.0
+matrix:
+  rewards:
+    - {kind: dense, delay_block_size: 1}
+    - {kind: delayed, delay_block_size: 8}
+    - {kind: delayed, delay_block_size: 32}
+    - {kind: sparse, delay_block_size: 1}
+  horizons: [3, full]
+  seeds: [100, 101, 102]
+base_config:
+  study_id: gae-pendulum-v1
+  algorithm: ppo
+  seed: 100
+  environment:
+    max_steps: 200
+    dt: 0.05
+    max_torque: 2.0
+    max_speed: 8.0
+    g: 10.0
+    m: 1.0
+    l: 1.0
+    include_time_remaining: true
+  reward:
+    kind: dense
+    delay_block_size: 1
+  estimator:
+    gamma: 0.995
+    lambda: 0.95
+    horizon: 3
+    actor_horizon: 3
+    critic_horizon: 3
+  training:
+    total_env_steps: 250000
+    episodes_per_rollout: 5
+    checkpoint_interval_env_steps: 50000
+  optimizer:
+    hidden_size: 64
+    actor_lr: 0.0003
+    critic_lr: 0.001
+    epochs: 10
+    minibatch_size: 250
+    clip_epsilon: 0.2
+    entropy_coef: 0.001
+    value_coef: 0.5
+    max_grad_norm: 1.0
+    target_kl: 0.01
+    normalize_advantages: true
+    init_log_std: -0.5
+  logging:
+    output_dir: runs
+    save_diagnostics: true
+    save_checkpoint: true
+  evaluation:
+    episodes: 20
+    interval_env_steps: 25000
+    seed: 20260905
+  seeds:
+    final_training_seeds: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    pilot_seeds: [100, 101, 102]

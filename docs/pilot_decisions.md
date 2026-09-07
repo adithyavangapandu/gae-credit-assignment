@@ -30,3 +30,7 @@ The runtime/cost estimate, failure count, metric endpoints, confirmatory matrix,
 final metadata commit, and `experiment-v1` tag are recorded here only after all
 pilot runs pass automated validation. Day 6 runs must not launch before that
 freeze.
+
+The four initial gate jobs were submitted once on September 7, 2026. Their
+resource IDs are recorded in `docs/day5_pilot.md`; the remaining 20 runs remain
+unsubmitted until the gate passes.

@@ -35,6 +35,7 @@ data/private/
 # Generated reports
 site/_site/
 .quarto/
+analysis/pilot_qc_data.json
 
 # OS and editor
 .DS_Store

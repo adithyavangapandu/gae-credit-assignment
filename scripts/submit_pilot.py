@@ -36,7 +36,7 @@ def job_state(row, project, region, sdk):
     if not store.exists("_SUBMISSION.json"):
         return "NOT_SUBMITTED", store
     receipt = json.loads(store.read_bytes("_SUBMISSION.json"))
-    job = sdk.CustomJob(receipt["job_resource_name"], project=project, location=region)
+    job = sdk.CustomJob.get(receipt["job_resource_name"])
     return job.state.name, store
 
 

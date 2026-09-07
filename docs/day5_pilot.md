@@ -66,3 +66,17 @@ After the four-run gate passes, preflight and submit the remaining queue with
 `--batch remaining`. Repeat validation until all 24 runs pass. Only then render
 the QC report, estimate cost from median pilot runtime with a 20% margin, create
 the confirmatory matrix, freeze decisions, and tag `experiment-v1`.
+
+## Initial gate submission
+
+The four gate jobs were submitted on September 7, 2026, each as attempt 1:
+
+| Condition | Vertex Custom Job |
+|---|---|
+| delayed-32 / H=3 / seed 100 | `4340729665732739072` |
+| dense / H=3 / seed 100 | `6608292078113783808` |
+| dense / full / seed 100 | `4707773035363434496` |
+| sparse / full / seed 100 | `574594477344161792` |
+
+All four were pending during the post-submission duplicate-safety check. The
+remaining 20 jobs have not been submitted and remain behind the quality gate.

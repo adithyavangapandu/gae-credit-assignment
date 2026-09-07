@@ -85,9 +85,7 @@ def submit_job(spec, gcp, *, resume=False, store=None, sdk=None):
             previous = json.loads(store.read_bytes("_SUBMISSION.json"))
             if previous.get("config_hash") != spec["config_hash"]:
                 raise ValueError("Previous submission config mismatch")
-            old_job = sdk.CustomJob(
-                previous["job_resource_name"], project=gcp.project_id, location=gcp.region
-            )
+            old_job = sdk.CustomJob.get(previous["job_resource_name"])
             if old_job.state.name not in {
                 "JOB_STATE_FAILED",
                 "JOB_STATE_CANCELLED",
@@ -117,6 +115,7 @@ def submit_job(spec, gcp, *, resume=False, store=None, sdk=None):
             "run_id": spec["display_name"],
             "config_hash": spec["config_hash"],
             "artifact_prefix": spec["artifact_prefix"],
+            "attempt_count": previous.get("attempt_count", 1) + 1 if resume else 1,
         }
         store.write_json("_SUBMISSION.json", result, overwrite=resume)
     except (ValueError, FileExistsError, KeyError):

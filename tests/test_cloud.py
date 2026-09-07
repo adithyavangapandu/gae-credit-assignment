@@ -224,7 +224,7 @@ def test_submission_is_fixed_cpu_and_rejects_completed_or_duplicate(tmp_path):
     with pytest.raises(FileExistsError):
         submit_job(spec, gcp(), store=store, sdk=sdk)
     assert not store.exists("_SUBMIT_LOCK.json")
-    sdk.CustomJob.return_value.state = SimpleNamespace(name="JOB_STATE_RUNNING")
+    sdk.CustomJob.get.return_value.state = SimpleNamespace(name="JOB_STATE_RUNNING")
     store.write_json("_LATEST_CHECKPOINT.json", {})
     with pytest.raises(ValueError, match="stopped"):
         submit_job(spec, gcp(), resume=True, store=store, sdk=sdk)

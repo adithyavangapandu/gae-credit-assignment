@@ -86,6 +86,9 @@ uses an immutable image digest, and creates one CPU Vertex Custom Job. Vertex
 tracks live metrics; GCS stores the authoritative checksummed artifacts, with
 `_SUCCESS` published last. The same validator checks downloaded runs.
 
+The [Day 4 validation record](docs/day4_validation.md) includes the submitted
+job link, image digest, completed checks, and commands to verify the cloud result.
+
 Periodic checkpoints preserve model/optimizer states, all RNG streams, reward
 buffers, and prior logs. Resume rejects mismatched configuration, code, image,
 runtime, or checkpoint schema. The cloud path uses ADC and a dedicated runtime

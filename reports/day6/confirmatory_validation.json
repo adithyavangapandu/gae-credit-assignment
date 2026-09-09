@@ -1,0 +1,650 @@
+{
+  "complete": false,
+  "expected_runs": 160,
+  "invalid_runs": 0,
+  "missing_runs": 160,
+  "purpose": "confirmatory integrity only; no treatment comparisons",
+  "reports": [
+    {
+      "run_id": "confirmatory-ppo-delayed8-h001-seed0-6e446d230dca",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-h001-seed1-fab0192780d0",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-h001-seed2-20888eaa93dd",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-h001-seed3-8396d396d6d7",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-h001-seed4-322b0780ef5b",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-h001-seed5-4ceec29b09c3",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-h001-seed6-b57635fbbc46",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-h001-seed7-b7a0c989b798",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-h001-seed8-f20eb7010275",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-h001-seed9-06d0783cb285",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-h016-seed0-ee3bd00698b5",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-h016-seed1-5e389e8af1b5",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-h016-seed2-961e0f0d8527",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-h016-seed3-d76a46975482",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-h016-seed4-6ee655994bfb",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-h016-seed5-3c9c38232c05",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-h016-seed6-17cda8875ae8",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-h016-seed7-6898e71dc9ab",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-h016-seed8-7046b441ac4e",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-h016-seed9-2cab1f616be4",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-h003-seed0-9213ff920697",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-h003-seed1-efa68deb2546",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-h003-seed2-a869da14ffde",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-h003-seed3-8dd741523f9d",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-h003-seed4-469a0ce64b16",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-h003-seed5-19d97aa29e1b",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-h003-seed6-b94a395958c8",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-h003-seed7-ab7f7e6e051f",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-h003-seed8-1da5be182918",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-h003-seed9-e5829a1b09c2",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-full-seed0-2096e1e7dc1e",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-full-seed1-d2080ad0091e",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-full-seed2-20181e544500",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-full-seed3-6ad4098ba240",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-full-seed4-f9b68420fb34",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-full-seed5-0095522deb14",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-full-seed6-cd3f412d6a86",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-full-seed7-f92641ff0e4e",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-full-seed8-1fbfdd318209",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed8-full-seed9-193d74e908ca",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-h001-seed0-ea91f348443b",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-h001-seed1-82790c6fb108",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-h001-seed2-25abcbe99022",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-h001-seed3-0bebc95d7c6d",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-h001-seed4-879c8a1980e0",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-h001-seed5-ac0c6c20e4c5",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-h001-seed6-29ac213c4971",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-h001-seed7-e280466c402f",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-h001-seed8-8d42755f3420",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-h001-seed9-2673be31d0d4",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-h016-seed0-d26ded4658e3",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-h016-seed1-0ea4b1f60e9b",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-h016-seed2-3e8c2ae51961",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-h016-seed3-9caa7d0833c4",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-h016-seed4-27e8ea6b2eeb",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-h016-seed5-b3915bb69c7b",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-h016-seed6-aac106c40908",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-h016-seed7-e7fe8bb945e7",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-h016-seed8-7859e05be4f3",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-h016-seed9-15547927a4ff",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-h003-seed0-c4dcc6a8688d",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-h003-seed1-66402ecff0b4",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-h003-seed2-8520f4ecbbf2",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-h003-seed3-0fdc953d95f8",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-h003-seed4-a574eecd99c5",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-h003-seed5-17453db660c3",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-h003-seed6-a7d17e138a97",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-h003-seed7-ef5e5768649c",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-h003-seed8-d02407157eed",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-h003-seed9-07efde71eb5c",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-full-seed0-72c76f68f35f",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-full-seed1-8921ecc62418",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-full-seed2-0357039ebda4",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-full-seed3-d675efcc8594",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-full-seed4-b2fc3e3d3f27",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-full-seed5-fd04aa645867",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-full-seed6-2580229ae272",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-full-seed7-bcdb9c32a1f2",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-full-seed8-30b8baecf048",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-delayed32-full-seed9-ad5ce22b240d",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-h001-seed0-8f81d299d4c8",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-h001-seed1-8f57b5fa9783",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-h001-seed2-618c319af09d",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-h001-seed3-455706b6b1d1",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-h001-seed4-fc7001cae037",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-h001-seed5-0fd29a1cfa44",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-h001-seed6-01ac4d30d39e",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-h001-seed7-96fc3281c0b5",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-h001-seed8-6e145ca3e51c",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-h001-seed9-5584b8a45b68",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-h016-seed0-ae38a9285491",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-h016-seed1-9419c36b7873",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-h016-seed2-a5b2125c5263",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-h016-seed3-93403eccf9af",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-h016-seed4-f60c96e1cbbf",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-h016-seed5-b69a9f646555",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-h016-seed6-76c67e89d050",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-h016-seed7-ae4ab5d2e0b6",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-h016-seed8-e1ae320522d8",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-h016-seed9-1122fb9684f6",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-h003-seed0-0c138c1787fb",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-h003-seed1-076bb150036a",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-h003-seed2-0636cff37e55",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-h003-seed3-d0df0f0dcbc8",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-h003-seed4-41aef8d1f79f",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-h003-seed5-c389375a78e3",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-h003-seed6-a1da7b012eb6",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-h003-seed7-10a886826a7d",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-h003-seed8-944f86f2a49c",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-h003-seed9-5e77205f269d",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-full-seed0-f8236c15bfdc",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-full-seed1-588de516a683",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-full-seed2-d857198eae7e",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-full-seed3-c0dc2bd87e3a",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-full-seed4-b93787a4d3de",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-full-seed5-f78f8e330d78",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-full-seed6-c052c566f18a",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-full-seed7-8e919fad8576",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-full-seed8-d0813f564f29",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-dense-full-seed9-9b0b571f3941",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-h001-seed0-92848b3f2954",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-h001-seed1-b6c862d8295c",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-h001-seed2-3109aa40963f",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-h001-seed3-a851d617641d",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-h001-seed4-5ff3d70fd567",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-h001-seed5-7b2f62094a58",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-h001-seed6-2650faa0a9bc",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-h001-seed7-99da580ae5cf",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-h001-seed8-675023e95b4b",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-h001-seed9-e3795d1491f3",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-h016-seed0-4e9c5d4cb7df",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-h016-seed1-4e2bcfff4c48",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-h016-seed2-ac72bc3cfd0c",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-h016-seed3-93629fffe5e0",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-h016-seed4-b78a2ceaaff1",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-h016-seed5-6b726f7c50b8",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-h016-seed6-1a5be77aff5a",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-h016-seed7-fd738590939a",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-h016-seed8-f1f188b7bc40",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-h016-seed9-268ae30bca8e",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-h003-seed0-b1d4cb431b94",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-h003-seed1-347a029eb7a0",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-h003-seed2-b77b21123959",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-h003-seed3-c31cc0220dcf",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-h003-seed4-e7f20bc8fa95",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-h003-seed5-211f840e32b0",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-h003-seed6-55f3715a513d",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-h003-seed7-28977d6bd49c",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-h003-seed8-bff635efa3c4",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-h003-seed9-ce6eb9508eea",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-full-seed0-1e26f12c6b5a",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-full-seed1-1343f770b644",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-full-seed2-9aca2cef5534",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-full-seed3-8bf0810ab535",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-full-seed4-56cb40e6ebe2",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-full-seed5-92cace413a74",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-full-seed6-94fbece6eeaa",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-full-seed7-f262c6b00ba1",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-full-seed8-7930f530bc17",
+      "status": "missing"
+    },
+    {
+      "run_id": "confirmatory-ppo-sparse-full-seed9-0e0b2a0f1769",
+      "status": "missing"
+    }
+  ],
+  "valid_runs": 0
+}

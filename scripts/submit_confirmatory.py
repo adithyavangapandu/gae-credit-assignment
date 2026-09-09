@@ -34,8 +34,15 @@ def main():
     parser.add_argument("--service-account", required=True)
     parser.add_argument("--batch", choices=("canary", "remaining"), default="canary")
     parser.add_argument("--max-concurrency", type=int, default=16)
+    parser.add_argument(
+        "--offline",
+        action="store_true",
+        help="Validate job specs without remote state checks; incompatible with --submit",
+    )
     parser.add_argument("--submit", action="store_true")
     args = parser.parse_args()
+    if args.offline and args.submit:
+        parser.error("--offline cannot be combined with --submit")
     if not 1 <= args.max_concurrency <= 32:
         raise ValueError("Day 6 concurrency must be between one and 32")
     rows = read_manifest(args.manifest)
@@ -47,11 +54,16 @@ def main():
         raise RuntimeError("Preflight report does not approve this manifest checksum")
     spec, base = load_confirmatory_spec(args.study_config)
     gcp = load_gcp_config(args.gcp_config)
-    from google.cloud import aiplatform
-
     states, stores = {}, {}
-    for row in rows:
-        states[row["run_id"]], stores[row["run_id"]] = job_state(row, gcp.project_id, aiplatform)
+    if args.offline:
+        states = {row["run_id"]: "NOT_SUBMITTED" for row in rows}
+    else:
+        from google.cloud import aiplatform
+
+        for row in rows:
+            states[row["run_id"]], stores[row["run_id"]] = job_state(
+                row, gcp.project_id, aiplatform
+            )
     canaries = [row for row in rows if is_canary(row)]
     if len(canaries) != 8:
         raise ValueError("Confirmatory canary must contain eight representative runs")
@@ -89,7 +101,17 @@ def main():
             active += 1
         else:
             results.append({"run_id": row["run_id"], "action": "ready"})
-    print(json.dumps({"batch": args.batch, "active_jobs": active, "results": results}, indent=2))
+    print(
+        json.dumps(
+            {
+                "batch": args.batch,
+                "offline": args.offline,
+                "active_jobs": active,
+                "results": results,
+            },
+            indent=2,
+        )
+    )
 
 
 if __name__ == "__main__":

@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "head_sha": "38839b1b987cada8f86aac63882b9cc2cf0f013c",
+  "freeze_sha": "2e33a841d06a5bfea41d9f1b8abc4f44c300f027",
+  "freeze_tag": "experiment-v1",
+  "image_uri": "us-central1-docker.pkg.dev/gae-experiment-507805/gae-training/trainer@sha256:be8ee1c8dc3bd54e58fa7e8582f73e10a3b36adc858860d65ea890285aa67fb4",
+  "manifest_sha256": "f6239f565eafcfb15020ce9752e85c6ba35e24ee488f7a81d70969a285ed683e",
+  "checks": {
+    "manifest": {
+      "passed": true,
+      "detail": "160 rows, sha256=f6239f565eafcfb15020ce9752e85c6ba35e24ee488f7a81d70969a285ed683e"
+    },
+    "git_clean": {
+      "passed": true,
+      "detail": "38839b1b987cada8f86aac63882b9cc2cf0f013c"
+    },
+    "freeze_tag": {
+      "passed": true,
+      "detail": "tag=2e33a841d06a5bfea41d9f1b8abc4f44c300f027, head=38839b1b987cada8f86aac63882b9cc2cf0f013c"
+    },
+    "dependency_lock": {
+      "passed": true,
+      "detail": "uv.lock exists"
+    },
+    "image_digest": {
+      "passed": true,
+      "detail": "us-central1-docker.pkg.dev/gae-experiment-507805/gae-training/trainer@sha256:be8ee1c8dc3bd54e58fa7e8582f73e10a3b36adc858860d65ea890285aa67fb4"
+    },
+    "pilot_complete": {
+      "passed": true,
+      "detail": "valid=24, invalid=0"
+    },
+    "seed_separation": {
+      "passed": true,
+      "detail": "seeds 0\u20139"
+    },
+    "single_image": {
+      "passed": true,
+      "detail": "one image"
+    },
+    "git_identity": {
+      "passed": true,
+      "detail": "frozen tag commit"
+    },
+    "gcp_target": {
+      "passed": true,
+      "detail": "gae-experiment-507805/us-central1"
+    },
+    "gcp_auth": {
+      "passed": true,
+      "detail": "adithyavangapandu05@gmail.com"
+    },
+    "gcs_collisions": {
+      "passed": true,
+      "detail": "all 160 output paths are unused"
+    },
+    "artifact_image": {
+      "passed": true,
+      "detail": "immutable image is readable"
+    },
+    "quota": {
+      "passed": true,
+      "detail": "CPU=42, pipelines=200, max_jobs=10"
+    },
+    "tests": {
+      "passed": true,
+      "detail": "156 passed in 3.96s"
+    }
+  },
+  "errors": [],
+  "runtime_estimate": {
+    "pilot_median_seconds": 302.84580280250003,
+    "estimated_seconds_per_full_run": 1211.3832112100001,
+    "estimated_total_compute_hours": 53.83925383155556,
+    "operational_cap_jobs": 10,
+    "requested_target_jobs": 32
+  },
+  "billing_check": "waived by user on 2026-09-09",
+  "status": "READY"
+}

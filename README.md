@@ -108,7 +108,10 @@ All 24 pilot runs passed. The rendered QC report is
 The confirmatory configuration adds 20 per-step diagnostic trajectories at each
 50,000-step checkpoint and a checksum-frozen 160-row manifest. Submission is
 guarded by `scripts/preflight_day6.py` and staged by
-`scripts/submit_confirmatory.py`.
+`scripts/submit_confirmatory.py`. `scripts/validate_confirmatory.py` checks the
+frozen identities and complete artifact contract without computing treatment
+comparisons. The [Day 6 launch boundary](docs/day6_launch.md) records the exact
+image, manifest, quota cap, dry run, and post-run validation procedure.
 
 ## Artifacts
 

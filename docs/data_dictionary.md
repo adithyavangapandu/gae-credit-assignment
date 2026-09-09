@@ -118,7 +118,15 @@ NPZ files contain finite numeric arrays, no pickle: `rewards[T]`, `values[T+1]`,
 `effective_horizon_1/3/16/full[T]`; `omitted_tail_h3[T]`, `tail_fraction_h3[T]`,
 `sign_disagreement_h3[T]`, and `final_event_credit_h3[T]`. Definitions are in
 [mathematical_definitions.md](mathematical_definitions.md). These estimator inputs
-permit offline recomputation; full raw physical/action trajectories are not saved.
+permit offline recomputation.
+
+Confirmatory runs additionally store
+`diagnostic_trajectories/checkpoint-NNNNNNN.parquet`. Each checkpoint file has 20
+fixed-seed deterministic evaluation trajectories and 4,000 per-step rows. Fields
+include pre/post observation, bounded and latent action, value prediction,
+training and base-dense rewards, physical state, applied torque, upright and
+terminal indicators, and delayed-reward payout metadata. Diagnostic collection
+uses the evaluation stream and does not consume training steps or training RNG.
 
 Reward transforms return transient dictionaries to the collector. Dense adds
 none. Delayed returns zero-based `block_id`, one-based `block_position`,

@@ -15,6 +15,7 @@ from .networks import Actor, Critic
 @dataclass(frozen=True)
 class EpisodeRollout:
     observations: NDArray[np.float32]
+    next_observations: NDArray[np.float32]
     actions: NDArray[np.float32]
     pre_tanh_actions: NDArray[np.float32]
     rewards: NDArray[np.float64]
@@ -22,6 +23,10 @@ class EpisodeRollout:
     values: NDArray[np.float64]
     terminated: NDArray[np.bool_]
     old_log_probs: NDArray[np.float32]
+    thetas: NDArray[np.float64]
+    theta_dots: NDArray[np.float64]
+    torques: NDArray[np.float64]
+    uprights: NDArray[np.bool_]
     metrics: dict[str, Any]
     reward_diagnostics: list[dict[str, Any]]
 
@@ -48,7 +53,14 @@ def collect_rollout(
     for seed in episode_seeds:
         observation, _ = env.reset(seed=int(seed))
         reward.reset()
-        observations, actions, pre_tanh_actions, old_log_probs = [], [], [], []
+        observations, next_observations, actions, pre_tanh_actions, old_log_probs = (
+            [],
+            [],
+            [],
+            [],
+            [],
+        )
+        thetas, theta_dots, torques, uprights = [], [], [], []
         rewards, base_rewards, values, terminals, diagnostics = [], [], [], [], []
         angle_cost = velocity_cost = torque_cost = torque_energy = 0.0
         upright_count = upright_streak = longest_streak = 0
@@ -65,6 +77,10 @@ def collect_rollout(
             old_log_probs.append(float(log_prob.item()))
             values.append(float(critic(observation_tensor).item()))
             next_observation, _, terminated, truncated, info = env.step(action_array)
+            next_observations.append(np.asarray(next_observation, dtype=np.float32).copy())
+            thetas.append(float(info["theta"]))
+            theta_dots.append(float(info["theta_dot"]))
+            torques.append(float(info["torque"]))
             train_reward, reward_info = reward.transform(
                 base_dense_reward=float(info["base_dense_reward"]),
                 theta=float(info["theta"]),
@@ -76,11 +92,12 @@ def collect_rollout(
             base_rewards.append(float(info["base_dense_reward"]))
             terminals.append(bool(terminated))
             diagnostics.append(dict(reward_info))
+            upright = bool(reward_info.get("upright", info["upright_indicator"]))
+            uprights.append(upright)
             angle_cost += float(info["angle_cost"])
             velocity_cost += float(info["velocity_cost"])
             torque_cost += float(info["torque_cost"])
             torque_energy += float(info["torque"]) ** 2 * env.config.dt
-            upright = bool(reward_info.get("upright", info["upright_indicator"]))
             if upright:
                 upright_count += 1
                 upright_streak += 1
@@ -117,6 +134,7 @@ def collect_rollout(
         episodes.append(
             EpisodeRollout(
                 observations=np.asarray(observations, dtype=np.float32),
+                next_observations=np.asarray(next_observations, dtype=np.float32),
                 actions=np.asarray(actions, dtype=np.float32),
                 pre_tanh_actions=np.asarray(pre_tanh_actions, dtype=np.float32),
                 rewards=np.asarray(rewards, dtype=np.float64),
@@ -124,6 +142,10 @@ def collect_rollout(
                 values=np.asarray(values, dtype=np.float64),
                 terminated=np.asarray(terminals, dtype=np.bool_),
                 old_log_probs=np.asarray(old_log_probs, dtype=np.float32),
+                thetas=np.asarray(thetas, dtype=np.float64),
+                theta_dots=np.asarray(theta_dots, dtype=np.float64),
+                torques=np.asarray(torques, dtype=np.float64),
+                uprights=np.asarray(uprights, dtype=np.bool_),
                 metrics=metrics,
                 reward_diagnostics=diagnostics,
             )

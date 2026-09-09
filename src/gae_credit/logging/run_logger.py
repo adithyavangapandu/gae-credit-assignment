@@ -116,9 +116,11 @@ class LocalArtifactLogger:
         self.path.mkdir(parents=True)
         (self.path / "diagnostics").mkdir()
         (self.path / "checkpoints").mkdir()
+        (self.path / "diagnostic_trajectories").mkdir()
         (self.path / "resolved_config.yaml").write_text(
             yaml.safe_dump(config.to_dict(), sort_keys=True)
         )
+        _write_json(self.path / "config.json", config.to_dict())
         commit, dirty = _git_metadata()
         self.manifest: dict[str, Any] = {
             "schema_version": SCHEMA_VERSION,
@@ -139,6 +141,7 @@ class LocalArtifactLogger:
         }
         self.manifest.update(self.context)
         _write_json(self.path / "manifest.json", self.manifest)
+        _write_json(self.path / "metadata.json", self.manifest)
         for name, schema in TABLE_SCHEMAS.items():
             self._writers[name] = pq.ParquetWriter(
                 self.path / f"{name}.parquet", schema, compression="zstd"
@@ -152,6 +155,10 @@ class LocalArtifactLogger:
                 if not re.fullmatch(r"[A-Za-z0-9_-]+\.npz", name):
                     raise ValueError("Invalid checkpoint diagnostic filename")
                 (self.path / "diagnostics" / name).write_bytes(data)
+            for name, data in resume_snapshot.get("trajectory_files", {}).items():
+                if not re.fullmatch(r"checkpoint-[0-9]{7}\.parquet", name):
+                    raise ValueError("Invalid checkpoint trajectory filename")
+                (self.path / "diagnostic_trajectories" / name).write_bytes(data)
 
     def snapshot(self) -> dict:
         from copy import deepcopy
@@ -160,6 +167,10 @@ class LocalArtifactLogger:
             "rows": deepcopy(self._rows),
             "diagnostics": {
                 p.name: p.read_bytes() for p in sorted((self.path / "diagnostics").glob("*.npz"))
+            },
+            "trajectory_files": {
+                p.name: p.read_bytes()
+                for p in sorted((self.path / "diagnostic_trajectories").glob("*.parquet"))
             },
         }
 
@@ -210,6 +221,21 @@ class LocalArtifactLogger:
         np.savez_compressed(path, **values)
         return path
 
+    def write_trajectories(self, checkpoint_env_steps: int, episodes) -> Path:
+        from gae_credit.logging.trajectories import TRAJECTORY_SCHEMA, trajectory_rows
+
+        count = self.config.logging.diagnostic_trajectories_per_checkpoint
+        if count <= 0 or len(episodes) < count:
+            raise ValueError("Insufficient episodes for checkpoint trajectories")
+        path = (
+            self.path / "diagnostic_trajectories" / f"checkpoint-{checkpoint_env_steps:07d}.parquet"
+        )
+        rows = trajectory_rows(self.run_id, checkpoint_env_steps, episodes[:count])
+        pq.write_table(
+            pa.Table.from_pylist(rows, schema=TRAJECTORY_SCHEMA), path, compression="zstd"
+        )
+        return path
+
     def _close(self) -> None:
         for writer in self._writers.values():
             writer.close()
@@ -226,12 +252,14 @@ class LocalArtifactLogger:
         _write_json(self.path / "summary.json", result)
         self.manifest.update(status="completed", finished_at=_now(), row_counts=self._counts)
         _write_json(self.path / "manifest.json", self.manifest)
+        _write_json(self.path / "metadata.json", self.manifest)
 
     def fail(self, error: BaseException | str) -> None:
         if not self._closed:
             self._close()
         self.manifest.update(status="failed", finished_at=_now(), error=str(error))
         _write_json(self.path / "manifest.json", self.manifest)
+        _write_json(self.path / "metadata.json", self.manifest)
 
 
 def _require(condition: bool, message: str) -> None:
@@ -305,6 +333,42 @@ def validate_run(run_dir: str | Path, *, require_success: bool = True) -> dict[s
     ):
         _require(field in manifest, f"Missing manifest field: {field}")
     tables = {name: _validate_table(path, name, expected_run_id) for name in TABLE_SCHEMAS}
+    trajectory_count = config.logging.diagnostic_trajectories_per_checkpoint
+    if trajectory_count:
+        from gae_credit.logging.trajectories import TRAJECTORY_SCHEMA
+
+        _require((path / "config.json").is_file(), "Missing confirmatory config.json")
+        _require((path / "metadata.json").is_file(), "Missing confirmatory metadata.json")
+        _require(
+            json.loads((path / "config.json").read_text()) == config.to_dict(),
+            "config.json mismatch",
+        )
+        _require(
+            json.loads((path / "metadata.json").read_text()) == manifest,
+            "metadata.json mismatch",
+        )
+        interval = config.training.checkpoint_interval_env_steps
+        expected_steps = list(range(interval, config.training.total_env_steps + 1, interval))
+        files = sorted((path / "diagnostic_trajectories").glob("checkpoint-*.parquet"))
+        _require(len(files) == len(expected_steps), "Incorrect checkpoint trajectory file count")
+        for file, step in zip(files, expected_steps):
+            trajectory_table = pq.read_table(file)
+            _require(
+                trajectory_table.schema.equals(TRAJECTORY_SCHEMA, check_metadata=True),
+                "Checkpoint trajectory schema mismatch",
+            )
+            _require(
+                trajectory_table.num_rows == trajectory_count * config.environment.max_steps,
+                "Incorrect checkpoint trajectory row count",
+            )
+            _require(
+                set(trajectory_table["checkpoint_env_steps"].to_pylist()) == {step},
+                "Checkpoint trajectory step mismatch",
+            )
+            _require(
+                set(trajectory_table["trajectory_id"].to_pylist()) == set(range(trajectory_count)),
+                "Checkpoint trajectory IDs are incomplete",
+            )
     updates = tables["updates"].to_pylist()
     episodes = tables["episodes"].to_pylist()
     evaluations = tables["evaluations"].to_pylist()

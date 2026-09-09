@@ -57,6 +57,9 @@ class RunLogger:
     def write_diagnostics(self, name, arrays):
         return self.local.write_diagnostics(name, arrays)
 
+    def write_trajectories(self, checkpoint_env_steps, episodes):
+        return self.local.write_trajectories(checkpoint_env_steps, episodes)
+
     def snapshot(self):
         return self.local.snapshot()
 

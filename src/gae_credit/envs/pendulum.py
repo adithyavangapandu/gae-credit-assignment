@@ -7,6 +7,8 @@ import gymnasium as gym
 import numpy as np
 from gymnasium import spaces
 
+ENVIRONMENT_VERSION = "pendulum-poststep-v1"
+
 
 def normalize_angle(theta: float) -> float:
     """Map an angle to [-pi, pi), with zero denoting upright."""

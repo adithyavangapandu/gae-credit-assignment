@@ -27,7 +27,7 @@ from gae_credit.checkpoint import (
 )
 from gae_credit.cloud.config import run_id_for, source_digest
 from gae_credit.config import StudyConfig, config_from_dict, derive_seeds, load_config
-from gae_credit.envs.pendulum import PendulumEnv
+from gae_credit.envs.pendulum import ENVIRONMENT_VERSION, PendulumEnv
 from gae_credit.envs.rewards import make_reward
 from gae_credit.estimators.gae import (
     compute_event_credit,
@@ -70,6 +70,7 @@ def run_training(
         "image_digest": None,
         **(context or {}),
         "source_digest": source_digest(),
+        "environment_version": ENVIRONMENT_VERSION,
     }
     context["run_id"] = run_id_for(config, context["phase"])
     if overwrite and artifact_logger is not None:
@@ -214,6 +215,13 @@ def run_training(
         }
         logger.log_evaluation(row)
         evaluation_rows.append(row)
+        interval = config.training.checkpoint_interval_env_steps
+        if (
+            config.logging.diagnostic_trajectories_per_checkpoint
+            and env_steps > 0
+            and env_steps % interval == 0
+        ):
+            logger.write_trajectories(env_steps, episodes)
 
     try:
         if not restored:

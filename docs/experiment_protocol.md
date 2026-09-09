@@ -93,6 +93,21 @@ bootstrap over the ten seed-level contrasts (10,000 draws, fixed analysis seed
 20260906) will produce 95% percentile intervals. Secondary comparisons remain
 labeled secondary rather than replacing the D=32 primary contrast.
 
+The single primary interaction contrast is tested without a multiplicity
+adjustment. Secondary horizon/reward contrasts form one family controlled with
+Holm adjustment; exploratory diagnostics remain descriptive. Dense H=3 is
+declared noninferior to dense full GAE when the lower endpoint of the paired 95%
+bootstrap interval for `AUC(H3)-AUC(full)` exceeds -100 base-dense-return
+points. This margin is fixed before confirmatory outcomes. Infrastructure-
+corrupted runs may resume from a verified checkpoint or rerun with the identical
+seed and configuration. Algorithmic divergence remains an observed result and
+is never relabeled or automatically replaced.
+
+Planned plots are individual-seed learning curves, paired-seed contrasts, reward
+distributions, KL/clipping and critic-fit traces, action dispersion/saturation,
+and credit-diagnostic summaries. No interim confirmatory result may change these
+endpoints, plots, or decision rules.
+
 Secondary metrics are stable-success rate, upright fraction, and final dense
 return. Stable success requires at least ten consecutive qualifying post-step
 states anywhere in the episode. A one-step upright fly-through is not success.
@@ -112,9 +127,9 @@ Actor and critic each have two 64-unit tanh layers. The actor has a learned
 state-independent log standard deviation, initialized to -0.5, and uses a
 Gaussian transformed by tanh then scaled to the torque bound. PPO stores latent
 actions and applies the exact stable log-Jacobian correction. Optimization uses
-Adam, actor LR 0.0003, critic LR 0.001, four epochs, 250-sample minibatches,
-clipping epsilon 0.2, value coefficient 0.5, entropy coefficient 0, gradient
-norm limit 0.5, and target KL 0.02 with stopping between epochs. Entropy is a
+Adam, actor LR 0.0003, critic LR 0.001, ten epochs, 250-sample minibatches,
+clipping epsilon 0.2, value coefficient 0.5, entropy coefficient 0.001, gradient
+norm limit 1.0, and target KL 0.01 with stopping between epochs. Entropy is a
 Monte Carlo estimate for the transformed policy; `action_std` is the Gaussian
 standard deviation before transformation. No hyperparameter tuning occurs here.
 
@@ -122,9 +137,10 @@ All runs use CPU and one PyTorch thread. The package versions are fixed by
 `uv.lock`; platform-to-platform bitwise equivalence is not claimed. Local runs
 require no cloud account. Manifest, resolved config, three typed Parquet tables,
 diagnostic arrays, final checkpoint, and summary are validated on completion.
-See [data_dictionary.md](data_dictionary.md). Checkpoints support inspection;
-resume is not implemented. Generated runs, credentials, PDFs, and old scripts
-are excluded from Git history.
+See [data_dictionary.md](data_dictionary.md). Checkpoints support exact
+update-boundary recovery. Confirmatory runs save 20 fixed-seed raw diagnostic
+trajectories at each 50,000-step checkpoint. Generated runs, credentials, PDFs,
+and old scripts are excluded from Git history.
 
 ## Protocol changelog
 
@@ -146,9 +162,14 @@ are excluded from Git history.
   adjusted calibration observed nonzero entry in 16.90% of 3,000 episodes and
   10-step success in 6.17%. No trained pilot or confirmatory outcomes existed.
   The single-adjustment limit is exhausted; this threshold is used for the pilot.
+- 2026-09-09: All 24 excluded pilot runs passed operational quality control.
+  Frozen the confirmatory PPO hyperparameters globally, added 20 raw diagnostic
+  evaluation trajectories at each 50,000-step checkpoint, and specified the
+  noninferiority, multiplicity, plotting, and failure rules above. These changes
+  follow the preregistered plan and operational needs, not pilot treatment
+  comparisons. No confirmatory outcomes existed.
 
 ## Deferred work
 
-The 220 confirmatory runs, VPG implementation, final hypothesis tests, and
-publication graphics remain deferred until the excluded pilot quality gate and
-configuration freeze are complete.
+The VPG replication, final hypothesis tests, and publication graphics remain
+deferred until the 160-run confirmatory PPO dataset is complete.

@@ -35,6 +35,8 @@ def build_job_spec(config, gcp, phase, image_uri, service_account, run_id=None, 
         "GAE_RUN_ID": expected,
         "GAE_GCS_PREFIX": prefix,
         "GAE_IMAGE_URI": image_uri,
+        "OMP_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
     }
     return {
         "display_name": expected,

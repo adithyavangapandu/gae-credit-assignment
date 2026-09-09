@@ -1,4 +1,4 @@
-# Pilot decisions and pending experiment-v1 freeze
+# Pilot decisions and experiment-v1 freeze
 
 Pilot results are excluded from final inference. This record may assess
 feasibility, numerical health, runtime, and operational failures; it may not
@@ -24,13 +24,25 @@ select a reward/horizon winner.
 - Pilot seeds are disjoint from confirmatory training seeds 0–9. Evaluation seed
   20260905 and diagnostic streams remain separate.
 
-## Pending the 24-run quality gate
+## Completed pilot quality gate
 
-The runtime/cost estimate, failure count, metric endpoints, confirmatory matrix,
-final metadata commit, and `experiment-v1` tag are recorded here only after all
-pilot runs pass automated validation. Day 6 runs must not launch before that
-freeze.
+All 24 runs reached 250,000 environment steps and passed checksums, schema,
+numeric-health, reward-delivery, checkpoint, seed, and GCS validation. There were
+zero missing or invalid runs. Median artifact runtime was 302.85 seconds and the
+longest was 326.43 seconds. Linear projection is 1,211 seconds per one-million-
+step run and 53.84 total compute hours for the 160-run PPO sweep before margin.
+The rendered QC report is `analysis/pilot_quality_control.html`.
 
-The four initial gate jobs were submitted once on September 7, 2026. Their
-resource IDs are recorded in `docs/day5_pilot.md`; the remaining 20 runs remain
-unsubmitted until the gate passes.
+The pilot was used only for feasibility and operations. No reward/horizon result
+was used to change a treatment, endpoint, or cell-specific hyperparameter.
+
+## Confirmatory settings
+
+The global pilot optimizer settings, sparse thresholds, dynamics, seed lists,
+reward formulas, GAE implementation, evaluation endpoint, metric schemas,
+analysis rules, and failure policy are frozen in
+`configs/confirmatory/study_v1.yaml` and `docs/experiment_protocol.md`.
+Confirmatory runs add 20 raw fixed-seed diagnostic trajectories at each
+50,000-step checkpoint; this logging requirement was requested before final
+launch and does not affect the training RNG streams. The immutable final image,
+manifest checksum, and freeze tag are recorded after the final build.

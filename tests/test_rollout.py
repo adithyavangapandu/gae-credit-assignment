@@ -29,6 +29,7 @@ def test_complete_rollouts_reproducible_and_keep_both_rewards(kind):
     for ep, again in zip(episodes, repeated):
         for field in (
             "observations",
+            "next_observations",
             "actions",
             "pre_tanh_actions",
             "rewards",
@@ -36,6 +37,10 @@ def test_complete_rollouts_reproducible_and_keep_both_rewards(kind):
             "values",
             "terminated",
             "old_log_probs",
+            "thetas",
+            "theta_dots",
+            "torques",
+            "uprights",
         ):
             np.testing.assert_array_equal(getattr(ep, field), getattr(again, field))
         assert ep.observations.shape == (20, 4)

@@ -19,9 +19,9 @@ remaining residual through the episode boundary. Both use real rewards and
 critic predictions. Comparing dense rewards with discounted-return-preserving
 delayed rewards helps study how reward timing interacts with that cutoff.
 
-**Current scope: the Days 1–4 validated PPO/cloud foundation plus the excluded
-Day 5 pilot quality gate. No learning performance claims.** Full training and
-final comparisons are deferred. Eventually this repository will accompany a report with the frozen
+**Current scope: the validated foundation, completed 24-run excluded pilot, and
+Day 6 confirmatory PPO launch. No learning performance claims.** Statistical
+comparisons wait for the complete dataset. Eventually this repository will accompany a report with the frozen
 protocol, seed-level learning curves, credit diagnostics, and reproducible
 analysis. The remote remains private during foundation work.
 
@@ -102,6 +102,13 @@ the deterministic 24-run matrix are committed before submission. Pilot seeds
 100–102 are excluded from confirmatory inference. Four representative jobs form
 the initial gate; the remaining queue cannot be released until those artifacts
 pass study-level validation.
+
+All 24 pilot runs passed. The rendered QC report is
+[`analysis/pilot_quality_control.html`](analysis/pilot_quality_control.html).
+The confirmatory configuration adds 20 per-step diagnostic trajectories at each
+50,000-step checkpoint and a checksum-frozen 160-row manifest. Submission is
+guarded by `scripts/preflight_day6.py` and staged by
+`scripts/submit_confirmatory.py`.
 
 ## Artifacts
 

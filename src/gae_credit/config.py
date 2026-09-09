@@ -99,6 +99,7 @@ class LoggingConfig:
     output_dir: str = "runs"
     save_diagnostics: bool = True
     save_checkpoint: bool = True
+    diagnostic_trajectories_per_checkpoint: int = 0
 
 
 @dataclass(frozen=True)
@@ -222,6 +223,19 @@ class StudyConfig:
         for name in ("save_diagnostics", "save_checkpoint"):
             if not isinstance(getattr(self.logging, name), bool):
                 raise ValueError(f"{name} must be boolean")
+        trajectory_count = self.logging.diagnostic_trajectories_per_checkpoint
+        if (
+            isinstance(trajectory_count, bool)
+            or not isinstance(trajectory_count, int)
+            or trajectory_count < 0
+        ):
+            raise ValueError("diagnostic trajectories per checkpoint must be nonnegative")
+        if trajectory_count and (
+            not checkpoint_interval or trajectory_count > self.evaluation.episodes
+        ):
+            raise ValueError(
+                "checkpoint trajectories require periodic checkpoints and enough evaluation episodes"
+            )
         for seed_set in (self.seeds.final_training_seeds, self.seeds.pilot_seeds):
             if not seed_set or len(set(seed_set)) != len(seed_set):
                 raise ValueError("seed sets must be nonempty and unique")
@@ -239,6 +253,8 @@ class StudyConfig:
         for name in ("upright_angle_threshold", "upright_velocity_threshold"):
             if result["reward"][name] is None:
                 result["reward"].pop(name)
+        if self.logging.diagnostic_trajectories_per_checkpoint == 0:
+            result["logging"].pop("diagnostic_trajectories_per_checkpoint")
         result["estimator"]["lambda"] = result["estimator"].pop("lam")
         result["seeds"] = {k: list(v) for k, v in result["seeds"].items()}
         return result

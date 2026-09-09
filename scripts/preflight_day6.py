@@ -109,8 +109,6 @@ def main():
             args.image_uri,
             "--project",
             args.project,
-            "--location",
-            gcp.region,
         )
         check("artifact_image", True, "immutable image is readable")
     except subprocess.CalledProcessError as error:

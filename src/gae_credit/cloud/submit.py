@@ -24,6 +24,12 @@ def build_job_spec(config, gcp, phase, image_uri, service_account, run_id=None, 
         raise ValueError("Pilot jobs must use an excluded pilot seed")
     if phase == "confirmatory" and config.seed not in config.seeds.final_training_seeds:
         raise ValueError("Confirmatory jobs must use a final training seed")
+    if phase == "confirmatory" and config.algorithm != "ppo":
+        raise ValueError("Confirmatory jobs require PPO")
+    if phase == "replication" and (
+        config.algorithm != "vpg" or config.seed not in config.seeds.final_training_seeds
+    ):
+        raise ValueError("Replication jobs require VPG and a final training seed")
     if phase == "pilot" and config.training.checkpoint_interval_env_steps != 50_000:
         raise ValueError("Pilot jobs require checkpoints every 50,000 environment steps")
     prefix = gcp.run_prefix(config, phase)

@@ -130,8 +130,8 @@ class StudyConfig:
     seeds: SeedConfig = field(default_factory=SeedConfig)
 
     def __post_init__(self):
-        if self.algorithm != "ppo":
-            raise ValueError("Only PPO is implemented")
+        if self.algorithm not in {"ppo", "vpg"}:
+            raise ValueError("algorithm must be ppo or vpg")
         if not isinstance(self.study_id, str) or not re.fullmatch(r"[A-Za-z0-9_-]+", self.study_id):
             raise ValueError("study_id must contain letters, digits, underscores or hyphens")
         for name, value in [("seed", self.seed), ("evaluation.seed", self.evaluation.seed)]:

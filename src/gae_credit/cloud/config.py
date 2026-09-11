@@ -12,7 +12,7 @@ import yaml
 
 from gae_credit.config import StudyConfig
 
-PHASES = ("smoke", "pilot", "confirmatory")
+PHASES = ("smoke", "pilot", "confirmatory", "replication")
 
 
 def run_id_for(config: StudyConfig, phase: str = "local") -> str:
@@ -25,7 +25,10 @@ def run_id_for(config: StudyConfig, phase: str = "local") -> str:
         reward += str(config.reward.delay_block_size)
     h = config.estimator.horizon
     horizon = "full" if h == "full" else f"h{h:03d}"
-    value = f"{phase}-ppo-{reward}-{horizon}-seed{config.seed}-{config.config_hash()[:12]}"
+    value = (
+        f"{phase}-{config.algorithm}-{reward}-{horizon}-seed{config.seed}-"
+        f"{config.config_hash()[:12]}"
+    )
     if len(value) > 63:
         raise ValueError("Generated run ID exceeds Vertex label length limit")
     return value
@@ -107,7 +110,7 @@ class GCPConfig:
         h = config.estimator.horizon
         horizon = "full" if h == "full" else f"h{h:03d}"
         return (
-            f"{self.artifact_bucket}/{self.prefix}/{phase}/algorithm=ppo/reward={reward}/"
+            f"{self.artifact_bucket}/{self.prefix}/{phase}/algorithm={config.algorithm}/reward={reward}/"
             f"horizon={horizon}/seed={config.seed}/run_id={run_id}"
         )
 

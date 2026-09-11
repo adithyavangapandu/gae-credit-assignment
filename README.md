@@ -122,6 +122,10 @@ storage, core-table assembly, run-level endpoints, paired seed contrasts,
 reward-by-horizon interactions, and credit-mechanism summaries. Generated data
 and results stay out of Git. Plotting is deferred.
 
+The [VPG robustness replication](docs/vpg_replication.md) defines the focused
+six-cell, 60-run follow-up and its freeze, submission, validation, resume, and
+guarded restart commands.
+
 ## Artifacts
 
 ```text

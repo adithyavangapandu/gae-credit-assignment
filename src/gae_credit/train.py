@@ -16,6 +16,7 @@ import torch
 from gae_credit.algorithms.networks import Actor, Critic
 from gae_credit.algorithms.ppo import PPO, prepare_batch
 from gae_credit.algorithms.rollout import collect_rollout
+from gae_credit.algorithms.vpg import VPG
 from gae_credit.checkpoint import (
     CHECKPOINT_VERSION,
     TrainingInterrupted,
@@ -89,7 +90,8 @@ def run_training(
         seed=int(model_seeds[0]),
     )
     critic = Critic(4, config.optimizer.hidden_size, seed=int(model_seeds[1]))
-    optimizer = PPO(actor, critic, config.optimizer)
+    optimizer_class = PPO if config.algorithm == "ppo" else VPG
+    optimizer = optimizer_class(actor, critic, config.optimizer)
     action_rng = torch.Generator().manual_seed(seeds["action"])
     update_rng = torch.Generator().manual_seed(seeds["optimization"])
     evaluation_rng = torch.Generator().manual_seed(seeds["evaluation"])

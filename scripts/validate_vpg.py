@@ -15,7 +15,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", default="data/manifests/vpg_replication_v1.parquet")
     parser.add_argument("--study-config", default="configs/replication/vpg_v1.yaml")
-    parser.add_argument("--download-root", type=Path, default=Path("runs/vpg_downloads"))
+    parser.add_argument(
+        "--download-root", type=Path, default=Path("runs/vpg_replication_v1_downloads")
+    )
     parser.add_argument("--project", default="gae-experiment-507805")
     parser.add_argument("--fetch-gcs", action="store_true")
     parser.add_argument("--require-complete", action="store_true")
@@ -47,8 +49,15 @@ def main():
                 "gcp_project": args.project,
                 "gcp_region": "us-central1",
             }
-            if any(manifest.get(key) != value for key, value in expected.items()):
-                raise ValueError("VPG artifact identity mismatch")
+            mismatches = {
+                key: {"expected": value, "actual": manifest.get(key)}
+                for key, value in expected.items()
+                if manifest.get(key) != value
+            }
+            if mismatches:
+                raise ValueError(
+                    f"VPG artifact identity mismatch: {json.dumps(mismatches, sort_keys=True)}"
+                )
             if config.evaluation.seed != row["evaluation_seed"]:
                 raise ValueError("VPG evaluation seed mismatch")
             reports.append({**report, "status": "valid"})

@@ -18,6 +18,7 @@ def command(*args):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", default="data/manifests/vpg_replication_v1.parquet")
+    parser.add_argument("--gcp-config", default="configs/cloud/gcp_vpg.yaml")
     parser.add_argument("--image-uri", required=True)
     parser.add_argument("--freeze-tag", default="vpg-replication-v1")
     parser.add_argument("--regional-cpu-quota", type=int, default=42)
@@ -56,7 +57,7 @@ def main():
         )
     except ValueError as error:
         check("immutable_image", False, str(error))
-    gcp = load_gcp_config("configs/cloud/gcp.yaml").validate(deployed=True)
+    gcp = load_gcp_config(args.gcp_config).validate(deployed=True)
     check("gcp_target", gcp.project_id == args.project, f"{gcp.project_id}/{gcp.region}")
     account = command("gcloud", "auth", "list", "--filter=status:ACTIVE", "--format=value(account)")
     check("gcp_auth", bool(account), account or "no active account")

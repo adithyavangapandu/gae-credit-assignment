@@ -27,7 +27,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", default="data/manifests/vpg_replication_v1.parquet")
     parser.add_argument("--study-config", default="configs/replication/vpg_v1.yaml")
-    parser.add_argument("--gcp-config", default="configs/cloud/gcp.yaml")
+    parser.add_argument("--gcp-config", default="configs/cloud/gcp_vpg.yaml")
     parser.add_argument("--preflight", default="reports/vpg/preflight_report.json")
     parser.add_argument("--service-account", required=True)
     parser.add_argument("--batch", choices=("canary", "remaining"), default="canary")

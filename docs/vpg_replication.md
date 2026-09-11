@@ -12,6 +12,16 @@ critic uses the same value target and ten fitting epochs as the frozen PPO
 configuration. `clip_fraction` is recorded as zero because VPG has no clipped
 surrogate. All other metric schemas remain identical.
 
+The VPG jobs use `configs/cloud/gcp_vpg.yaml`. They retain the existing project,
+region, bucket, TensorBoard, service account, and `n1-standard-4` machine, while
+using the dedicated `vpg_replication_v1` GCS prefix and
+`gae-pendulum-vpg-v1` Vertex Experiment. This preserves an initial set of six
+otherwise-valid canaries whose first image embedded an incorrect Git SHA; those
+artifacts are excluded on provenance grounds and are never overwritten.
+The validator mirrors corrected runs under `runs/vpg_replication_v1_downloads`,
+so previously downloaded excluded canaries cannot be mistaken for replacement
+runs with the same experimental run IDs.
+
 ## Freeze and generate the matrix
 
 Run tests, commit the VPG implementation, and build from that clean commit:

@@ -14,7 +14,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run-id", required=True)
     parser.add_argument("--manifest", default="data/manifests/vpg_replication_v1.parquet")
-    parser.add_argument("--gcp-config", default="configs/cloud/gcp.yaml")
+    parser.add_argument("--gcp-config", default="configs/cloud/gcp_vpg.yaml")
     parser.add_argument("--execute", action="store_true")
     parser.add_argument("--confirm-run-id")
     args = parser.parse_args()

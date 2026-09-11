@@ -9,6 +9,7 @@ from gae_credit.confirmatory import config_for_row, load_confirmatory_spec, read
 from gae_credit.storage.gcs import GCSArtifactStore
 
 ACTIVE_STATES = {"JOB_STATE_QUEUED", "JOB_STATE_PENDING", "JOB_STATE_RUNNING"}
+RETRYABLE_STATES = {"JOB_STATE_FAILED", "JOB_STATE_CANCELLED", "JOB_STATE_EXPIRED"}
 
 
 def is_canary(row):
@@ -33,6 +34,7 @@ def main():
     parser.add_argument("--preflight", default="reports/day6/preflight_report.json")
     parser.add_argument("--service-account", required=True)
     parser.add_argument("--batch", choices=("canary", "remaining"), default="canary")
+    parser.add_argument("--resume-run", help="Resume one terminal failed run from its checkpoint")
     parser.add_argument("--max-concurrency", type=int, default=16)
     parser.add_argument(
         "--offline",
@@ -43,6 +45,8 @@ def main():
     args = parser.parse_args()
     if args.offline and args.submit:
         parser.error("--offline cannot be combined with --submit")
+    if args.offline and args.resume_run:
+        parser.error("--offline cannot verify a resumable cloud run")
     if not 1 <= args.max_concurrency <= 32:
         raise ValueError("Day 6 concurrency must be between one and 32")
     rows = read_manifest(args.manifest)
@@ -67,6 +71,40 @@ def main():
     canaries = [row for row in rows if is_canary(row)]
     if len(canaries) != 8:
         raise ValueError("Confirmatory canary must contain eight representative runs")
+    active = sum(state in ACTIVE_STATES for state in states.values())
+    if args.resume_run:
+        matches = [row for row in rows if row["run_id"] == args.resume_run]
+        if len(matches) != 1:
+            raise ValueError("--resume-run must name exactly one frozen manifest row")
+        row = matches[0]
+        state = states[row["run_id"]]
+        if state not in RETRYABLE_STATES:
+            raise RuntimeError(f"Run is not terminal and retryable: {state}")
+        if active >= args.max_concurrency:
+            raise RuntimeError("Concurrency cap is full; wait before resuming")
+        config = config_for_row(spec, base, row)
+        job_spec = build_job_spec(
+            config,
+            gcp,
+            "confirmatory",
+            row["image_digest"],
+            args.service_account,
+            row["run_id"],
+            resume=True,
+        )
+        result = {"run_id": row["run_id"], "action": "ready-to-resume", "state": state}
+        if args.submit:
+            receipt = submit_job(
+                job_spec,
+                gcp,
+                resume=True,
+                store=stores[row["run_id"]],
+                sdk=aiplatform,
+            )
+            result = {"run_id": row["run_id"], "action": "resumed", **receipt}
+            active += 1
+        print(json.dumps({"active_jobs": active, "results": [result]}, indent=2))
+        return
     if args.batch == "remaining":
         failed_gate = [
             row["run_id"] for row in canaries if states[row["run_id"]] != "JOB_STATE_SUCCEEDED"
@@ -76,7 +114,6 @@ def main():
         selected = [row for row in rows if not is_canary(row)]
     else:
         selected = canaries
-    active = sum(state in ACTIVE_STATES for state in states.values())
     results = []
     for row in selected:
         state = states[row["run_id"]]

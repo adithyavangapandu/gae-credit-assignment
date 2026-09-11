@@ -36,6 +36,8 @@ data/private/
 site/_site/
 .quarto/
 analysis/pilot_qc_data.json
+analysis/day8/data/
+analysis/day8/results/
 
 # OS and editor
 .DS_Store

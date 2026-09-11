@@ -111,7 +111,16 @@ guarded by `scripts/preflight_day6.py` and staged by
 `scripts/submit_confirmatory.py`. `scripts/validate_confirmatory.py` checks the
 frozen identities and complete artifact contract without computing treatment
 comparisons. The [Day 6 launch boundary](docs/day6_launch.md) records the exact
-image, manifest, quota cap, dry run, and post-run validation procedure.
+image, manifest, quota cap, dry run, failed-run reset/resume commands, queue
+refill loop, and post-run validation procedure.
+
+## Day 8 analysis
+
+The [Day 8 PPO analysis workspace](analysis/day8/README.md) contains a separately
+frozen protocol and numbered scripts for GCS discovery, checksum-validated local
+storage, core-table assembly, run-level endpoints, paired seed contrasts,
+reward-by-horizon interactions, and credit-mechanism summaries. Generated data
+and results stay out of Git. Plotting is deferred.
 
 ## Artifacts
 

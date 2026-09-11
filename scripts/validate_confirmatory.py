@@ -4,43 +4,10 @@ import argparse
 import json
 from pathlib import Path
 
-import numpy as np
-import pyarrow.parquet as pq
-
-from gae_credit.cloud.config import image_digest
-from gae_credit.confirmatory import config_for_row, load_confirmatory_spec, read_manifest
-from gae_credit.logging import validate_run
+from gae_credit.analysis.integrity import validate_confirmatory_run
+from gae_credit.confirmatory import load_confirmatory_spec, read_manifest
 from gae_credit.storage.download import download_run
 from gae_credit.storage.gcs import GCSArtifactStore
-
-
-def validate_confirmatory_run(path, row, spec, base):
-    report = validate_run(path)
-    config = config_for_row(spec, base, row)
-    manifest = json.loads((path / "manifest.json").read_text())
-    if manifest.get("phase") != "confirmatory":
-        raise ValueError("run phase is not confirmatory")
-    if manifest.get("config_hash") != row["config_hash"]:
-        raise ValueError("manifest config hash does not match frozen matrix")
-    if manifest.get("git_commit") != row["git_sha"] or manifest.get("git_dirty") is not False:
-        raise ValueError("run does not use the frozen clean source commit")
-    if manifest.get("image_digest") != image_digest(row["image_digest"]):
-        raise ValueError("run does not use the frozen image digest")
-    if manifest.get("gcp_project") != "gae-experiment-507805":
-        raise ValueError("run used the wrong GCP project")
-    if manifest.get("gcp_region") != "us-central1":
-        raise ValueError("run used the wrong GCP region")
-    if manifest.get("environment_version") != "pendulum-poststep-v1":
-        raise ValueError("run used an unexpected environment version")
-    updates = pq.read_table(path / "updates.parquet").to_pandas()
-    if not np.isfinite(updates.select_dtypes(include="number").to_numpy()).all():
-        raise ValueError("training metrics contain nonfinite values")
-    expected_updates = config.training.total_env_steps // (
-        config.training.episodes_per_rollout * config.environment.max_steps
-    )
-    if len(updates) != expected_updates:
-        raise ValueError("run terminated before the frozen training budget")
-    return {**report, "status": "valid", "runtime_seconds": float(updates.elapsed_seconds.iloc[-1])}
 
 
 def main():

@@ -2,7 +2,7 @@
   "complete": false,
   "expected_runs": 160,
   "invalid_runs": 0,
-  "missing_runs": 160,
+  "missing_runs": 152,
   "purpose": "confirmatory integrity only; no treatment comparisons",
   "reports": [
     {
@@ -86,8 +86,16 @@
       "status": "missing"
     },
     {
+      "actor_horizon": 3,
+      "critic_horizon": 3,
+      "episodes": 7020,
+      "evaluation_count": 101,
       "run_id": "confirmatory-ppo-delayed8-h003-seed0-9213ff920697",
-      "status": "missing"
+      "runtime_seconds": 1427.5511006379998,
+      "status": "valid",
+      "total_env_steps": 1000000,
+      "updates": 1000,
+      "valid": true
     },
     {
       "run_id": "confirmatory-ppo-delayed8-h003-seed1-efa68deb2546",
@@ -126,8 +134,16 @@
       "status": "missing"
     },
     {
+      "actor_horizon": "full",
+      "critic_horizon": "full",
+      "episodes": 7020,
+      "evaluation_count": 101,
       "run_id": "confirmatory-ppo-delayed8-full-seed0-2096e1e7dc1e",
-      "status": "missing"
+      "runtime_seconds": 1365.246960104,
+      "status": "valid",
+      "total_env_steps": 1000000,
+      "updates": 1000,
+      "valid": true
     },
     {
       "run_id": "confirmatory-ppo-delayed8-full-seed1-d2080ad0091e",
@@ -246,8 +262,16 @@
       "status": "missing"
     },
     {
+      "actor_horizon": 3,
+      "critic_horizon": 3,
+      "episodes": 7020,
+      "evaluation_count": 101,
       "run_id": "confirmatory-ppo-delayed32-h003-seed0-c4dcc6a8688d",
-      "status": "missing"
+      "runtime_seconds": 1361.924890899,
+      "status": "valid",
+      "total_env_steps": 1000000,
+      "updates": 1000,
+      "valid": true
     },
     {
       "run_id": "confirmatory-ppo-delayed32-h003-seed1-66402ecff0b4",
@@ -286,8 +310,16 @@
       "status": "missing"
     },
     {
+      "actor_horizon": "full",
+      "critic_horizon": "full",
+      "episodes": 7020,
+      "evaluation_count": 101,
       "run_id": "confirmatory-ppo-delayed32-full-seed0-72c76f68f35f",
-      "status": "missing"
+      "runtime_seconds": 1395.3378467100001,
+      "status": "valid",
+      "total_env_steps": 1000000,
+      "updates": 1000,
+      "valid": true
     },
     {
       "run_id": "confirmatory-ppo-delayed32-full-seed1-8921ecc62418",
@@ -406,8 +438,16 @@
       "status": "missing"
     },
     {
+      "actor_horizon": 3,
+      "critic_horizon": 3,
+      "episodes": 7020,
+      "evaluation_count": 101,
       "run_id": "confirmatory-ppo-dense-h003-seed0-0c138c1787fb",
-      "status": "missing"
+      "runtime_seconds": 1334.58783426,
+      "status": "valid",
+      "total_env_steps": 1000000,
+      "updates": 1000,
+      "valid": true
     },
     {
       "run_id": "confirmatory-ppo-dense-h003-seed1-076bb150036a",
@@ -446,8 +486,16 @@
       "status": "missing"
     },
     {
+      "actor_horizon": "full",
+      "critic_horizon": "full",
+      "episodes": 7020,
+      "evaluation_count": 101,
       "run_id": "confirmatory-ppo-dense-full-seed0-f8236c15bfdc",
-      "status": "missing"
+      "runtime_seconds": 1317.230615772,
+      "status": "valid",
+      "total_env_steps": 1000000,
+      "updates": 1000,
+      "valid": true
     },
     {
       "run_id": "confirmatory-ppo-dense-full-seed1-588de516a683",
@@ -566,8 +614,16 @@
       "status": "missing"
     },
     {
+      "actor_horizon": 3,
+      "critic_horizon": 3,
+      "episodes": 7020,
+      "evaluation_count": 101,
       "run_id": "confirmatory-ppo-sparse-h003-seed0-b1d4cb431b94",
-      "status": "missing"
+      "runtime_seconds": 1354.4786058509999,
+      "status": "valid",
+      "total_env_steps": 1000000,
+      "updates": 1000,
+      "valid": true
     },
     {
       "run_id": "confirmatory-ppo-sparse-h003-seed1-347a029eb7a0",
@@ -606,8 +662,16 @@
       "status": "missing"
     },
     {
+      "actor_horizon": "full",
+      "critic_horizon": "full",
+      "episodes": 7020,
+      "evaluation_count": 101,
       "run_id": "confirmatory-ppo-sparse-full-seed0-1e26f12c6b5a",
-      "status": "missing"
+      "runtime_seconds": 1345.04522427,
+      "status": "valid",
+      "total_env_steps": 1000000,
+      "updates": 1000,
+      "valid": true
     },
     {
       "run_id": "confirmatory-ppo-sparse-full-seed1-1343f770b644",
@@ -646,5 +710,5 @@
       "status": "missing"
     }
   ],
-  "valid_runs": 0
+  "valid_runs": 8
 }

@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "head_sha": "32398baf45c14b8f88a6d15e189c17c3adc181bb",
+  "head_sha": "43029afbdda7a20adeff30d2448edd926bdee190",
   "freeze_sha": "547e06c10e740a275559671cd8e91f3b510eea9f",
   "freeze_tag": "vpg-replication-v1",
-  "manifest_sha256": "28ea48ad698c6da14e04b784417475b8d0099638e69be1cb38303e4c26a9c5e0",
-  "image_uri": "us-central1-docker.pkg.dev/gae-experiment-507805/gae-training/trainer@sha256:3cd7635457c888cd55ae55c92af55358aae6d0fe4a92a723374bfe36a76b4e7b",
+  "manifest_sha256": "e9e05156379cd58d6e17c8651494f197a71395c1a5f9c32116a1393fb941c508",
+  "image_uri": "us-central1-docker.pkg.dev/gae-experiment-507805/gae-training/trainer@sha256:94d59686c948d465307c2b3eb3e68956b322b38abbe8451f150ca8dde6aff17d",
   "operational_concurrency_cap": 10,
   "checks": {
     "six_cells": {
@@ -25,7 +25,7 @@
     },
     "git_clean": {
       "passed": true,
-      "detail": "32398baf45c14b8f88a6d15e189c17c3adc181bb"
+      "detail": "43029afbdda7a20adeff30d2448edd926bdee190"
     },
     "freeze_tag": {
       "passed": true,
@@ -33,7 +33,7 @@
     },
     "immutable_image": {
       "passed": true,
-      "detail": "us-central1-docker.pkg.dev/gae-experiment-507805/gae-training/trainer@sha256:3cd7635457c888cd55ae55c92af55358aae6d0fe4a92a723374bfe36a76b4e7b"
+      "detail": "us-central1-docker.pkg.dev/gae-experiment-507805/gae-training/trainer@sha256:94d59686c948d465307c2b3eb3e68956b322b38abbe8451f150ca8dde6aff17d"
     },
     "gcp_target": {
       "passed": true,
@@ -57,7 +57,7 @@
     },
     "tests": {
       "passed": true,
-      "detail": "165 passed in 4.08s"
+      "detail": "165 passed in 4.00s"
     }
   },
   "errors": [],

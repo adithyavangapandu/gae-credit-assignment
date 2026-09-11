@@ -18,6 +18,7 @@ COPY src ./src
 RUN if [ "$INSTALL_GCP" = "true" ]; then uv sync --locked --extra gcp --no-dev --no-editable; \
     else uv sync --locked --no-dev --no-editable; fi
 COPY configs ./configs
+COPY analysis/day8/analysis_v1.yaml ./analysis/day8/analysis_v1.yaml
 COPY scripts ./scripts
 RUN groupadd --gid 10001 experiment \
     && useradd --uid 10001 --gid experiment --create-home experiment \

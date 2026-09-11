@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "head_sha": "32398baf45c14b8f88a6d15e189c17c3adc181bb",
+  "freeze_sha": "547e06c10e740a275559671cd8e91f3b510eea9f",
+  "freeze_tag": "vpg-replication-v1",
+  "manifest_sha256": "28ea48ad698c6da14e04b784417475b8d0099638e69be1cb38303e4c26a9c5e0",
+  "image_uri": "us-central1-docker.pkg.dev/gae-experiment-507805/gae-training/trainer@sha256:3cd7635457c888cd55ae55c92af55358aae6d0fe4a92a723374bfe36a76b4e7b",
+  "operational_concurrency_cap": 10,
+  "checks": {
+    "six_cells": {
+      "passed": true,
+      "detail": "60 rows across six cells"
+    },
+    "ten_seeds": {
+      "passed": true,
+      "detail": "seeds 0-9"
+    },
+    "training_budget": {
+      "passed": true,
+      "detail": "1,000,000"
+    },
+    "evaluation_seed": {
+      "passed": true,
+      "detail": "20260905"
+    },
+    "git_clean": {
+      "passed": true,
+      "detail": "32398baf45c14b8f88a6d15e189c17c3adc181bb"
+    },
+    "freeze_tag": {
+      "passed": true,
+      "detail": "tag=547e06c10e740a275559671cd8e91f3b510eea9f"
+    },
+    "immutable_image": {
+      "passed": true,
+      "detail": "us-central1-docker.pkg.dev/gae-experiment-507805/gae-training/trainer@sha256:3cd7635457c888cd55ae55c92af55358aae6d0fe4a92a723374bfe36a76b4e7b"
+    },
+    "gcp_target": {
+      "passed": true,
+      "detail": "gae-experiment-507805/us-central1"
+    },
+    "gcp_auth": {
+      "passed": true,
+      "detail": "adithyavangapandu05@gmail.com"
+    },
+    "gcs_paths_unused": {
+      "passed": true,
+      "detail": "0 collisions"
+    },
+    "artifact_image": {
+      "passed": true,
+      "detail": "immutable image is readable"
+    },
+    "quota": {
+      "passed": true,
+      "detail": "CPU=42, pipelines=200, max_jobs=10"
+    },
+    "tests": {
+      "passed": true,
+      "detail": "165 passed in 4.08s"
+    }
+  },
+  "errors": [],
+  "status": "READY"
+}

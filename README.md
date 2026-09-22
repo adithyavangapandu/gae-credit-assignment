@@ -317,7 +317,3 @@ done
 The container pins Python and uv, installs from `uv.lock`, and runs as a non-root
 user. Git metadata and all generated/local-only directories are excluded from
 the build context.
-
-## License
-
-MIT. See [LICENSE](LICENSE).

@@ -21,25 +21,41 @@ credentials*.json
 *.pem
 *.key
 
-# Generated experiments and references
+# Generated experiment data and references
 runs/
 outputs/
 checkpoints/
 logs/
-data/raw/
-data/private/
+data/
+reports/
 *.pdf
 *.pt
 *.pth
+*.csv
+*.feather
+*.gif
+*.jpeg
+*.jpg
+*.npy
+*.npz
+*.parquet
+*.png
+*.svg
 
 # Generated reports
 site/_site/
 .quarto/
 analysis/pilot_qc_data.json
+analysis/pilot_quality_control.html
 analysis/day8/data/
 analysis/day8/results/
+
+# The publication website is maintained separately from this code repository.
+research_site/
 
 # OS and editor
 .DS_Store
 .vscode/
 .idea/
+
+**/*.quarto_ipynb

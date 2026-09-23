@@ -23,6 +23,12 @@ replication are also defined. See [the experiment protocol](docs/experiment_prot
 and [mathematical definitions](docs/mathematical_definitions.md) before changing
 the frozen study files.
 
+**Research website:** [How Far Should GAE Look Ahead?](https://gae-credit-assignment.adi05.chatgpt.site)
+
+The website is deployed independently from this code-only repository. See the
+[website deployment guide](docs/website_deployment.md) to publish an updated
+version at the same URL.
+
 ## Repository contents
 
 ```text
